@@ -212,8 +212,8 @@ confirm.requestFocus();
     private void confirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmActionPerformed
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 String sd = dateFormat.format(date.getDate());
-//new CMRxCASHxGiven_NEW(baseadd,logo,sd,user,IDyear,Syear,Eyear).setVisible(true);
-new CMRxCASHxGiven_NEW_Auto(baseadd,logo,sd,user,IDyear,Syear,Eyear).setVisible(true);
+new CMRxCASHxGiven_NEW(baseadd,logo,sd,user,IDyear,Syear,Eyear).setVisible(true);
+//new CMRxCASHxGiven_NEW_Auto(baseadd,logo,sd,user,IDyear,Syear,Eyear).setVisible(true);
 this.dispose();
 
     }//GEN-LAST:event_confirmActionPerformed
