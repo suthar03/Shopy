@@ -5,7 +5,6 @@
  */
 package shopyfinal;
 
-
 import com.toedter.calendar.JDateChooser;
 import java.awt.AWTException;
 import java.awt.Dimension;
@@ -19,12 +18,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,18 +37,26 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
  * @author Suthar
  */
-public class NewMenuH121 extends javax.swing.JFrame  {
-    
-   String baseadd,logo,user,lang="English";
-   String IDyear="2020-2020",Syear="01/01/2020",Eyear="01/01/2020";
-    public NewMenuH121(String base,String golo) {
-        baseadd=base;
-        logo=golo;
+public class NewMenuH121 extends javax.swing.JFrame {
+
+    String baseadd, logo, user, lang = "English";
+    String IDyear = "2020-2020", Syear = "01/01/2020", Eyear = "01/01/2020";
+    PriorityQueue<Tabuler> Highest_Sold;
+    int number_in_top = 15;
+
+    public NewMenuH121(String base, String golo) {
+        baseadd = base;
+        logo = golo;
         initComponents();//[1598, 9
         iconer();
         this.setTitle("SHOPY");
@@ -56,381 +67,456 @@ public class NewMenuH121 extends javax.swing.JFrame  {
         } catch (IOException ex) {
             Logger.getLogger(NewMenuH121.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         try {
-            user = GetLine.mainn(baseadd+"/Cuser.txt", 2);
+            user = GetLine.mainn(baseadd + "/Cuser.txt", 2);
             usd.setText(user);
         } catch (IOException ex) {
-             JLabel label = new JLabel("Current user !!! Error0003");
+            JLabel label = new JLabel("Current user !!! Error0003");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-      }
-        System.out.println(baseadd+"/"+user+"/CurrentYear.txt");
-        try {
-            IDyear = GetLine.mainn(baseadd+"/"+user+"/CurrentYear.txt", 1);
-            Syear = GetLine.mainn(baseadd+"/"+user+"/CurrentYear.txt", 2);
-            Eyear = GetLine.mainn(baseadd+"/"+user+"/CurrentYear.txt", 3);
-            
-        } catch (IOException ex) {
-            JLabel label = new JLabel("Current user !!! Error0003"+ex);
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(this,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
-        if(IDyear==null){
+        System.out.println(baseadd + "/" + user + "/CurrentYear.txt");
+        try {
+            IDyear = GetLine.mainn(baseadd + "/" + user + "/CurrentYear.txt", 1);
+            Syear = GetLine.mainn(baseadd + "/" + user + "/CurrentYear.txt", 2);
+            Eyear = GetLine.mainn(baseadd + "/" + user + "/CurrentYear.txt", 3);
+
+        } catch (IOException ex) {
+            JLabel label = new JLabel("Current user !!! Error0003" + ex);
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(this, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+        if (IDyear == null) {
             yearsetter();
         }
         System.out.println(IDyear);
         System.out.println(Syear);
         System.out.println(Eyear);
         try {
-        Robot r=new Robot();
-        r.keyPress(KeyEvent.VK_ALT);
-        r.keyPress(KeyEvent.VK_SHIFT);
-        r.keyPress(KeyEvent.VK_0);
-        r.keyRelease(KeyEvent.VK_0);
-        r.keyRelease(KeyEvent.VK_SHIFT);
-        r.keyRelease(KeyEvent.VK_ALT);
-    } catch (AWTException ex) {
-        JLabel label = new JLabel("Language Setup Error !!");        
-        label.setFont(new Font("Arial", Font.BOLD, 18));        
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-    }
-        
+            Robot r = new Robot();
+            r.keyPress(KeyEvent.VK_ALT);
+            r.keyPress(KeyEvent.VK_SHIFT);
+            r.keyPress(KeyEvent.VK_0);
+            r.keyRelease(KeyEvent.VK_0);
+            r.keyRelease(KeyEvent.VK_SHIFT);
+            r.keyRelease(KeyEvent.VK_ALT);
+        } catch (AWTException ex) {
+            JLabel label = new JLabel("Language Setup Error !!");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+
         //################################
         //Language setup
         try {
-        lang = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 1);
-        if(lang==null){
-            JLabel label = new JLabel("Configuration Error !!! Error0003");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-        this.dispose();
-        System.exit(0);
-        }
+            lang = GetLine.mainn(baseadd + "/" + user + "/conf.txt", 1);
+            if (lang == null) {
+                JLabel label = new JLabel("Configuration Error !!! Error0003");
+                label.setFont(new Font("Arial", Font.BOLD, 18));
+                JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+                this.dispose();
+                System.exit(0);
+            }
         } catch (IOException ex) {
-        JLabel label = new JLabel("Configuration Error !!! Error0003");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JLabel label = new JLabel("Configuration Error !!! Error0003");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
         langview();
         //setDefaultCloseOperation(clos());
         this.addWindowListener(new WindowAdapter() {
-    public void windowClosing(WindowEvent event) {
-        try {
-            //your logic here
-            if(GetLine.mainn(baseadd+"/"+user+"/conf.txt", 4).equalsIgnoreCase("true")){
-            String Dfrom =baseadd+"/"+user+"/"+IDyear;
-        String Dto = "E:/Backup" ;
-        String curr =baseadd+"/"+user;
-        try {
-            Dto = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 3);
-            Dto = Dto+"/"+user+"/"+IDyear;
-            System.out.println(Dto);
-            File fl = new File(Dto);
-            if(!fl.exists()){
-                System.out.println("File Dowsnt Exist  "+fl.getAbsolutePath());
-                    Direct(fl);
-            }
-            //Configuration wagera
-            File Par = fl.getParentFile();
-            copyOnlyFile(curr,Par.getPath());
-            
-            if(fl.isDirectory()){
-                if(!fl.exists()){
-                    System.out.println("File Dowsnt Exist  "+fl.getAbsolutePath());
-                    Direct(fl);
-                }
+            public void windowClosing(WindowEvent event) {
+                try {
+                    //your logic here
+                    if (GetLine.mainn(baseadd + "/" + user + "/conf.txt", 4).equalsIgnoreCase("true")) {
+                        String Dfrom = baseadd + "/" + user + "/" + IDyear;
+                        String Dto = "E:/Backup";
+                        String curr = baseadd + "/" + user;
+                        try {
+                            Dto = GetLine.mainn(baseadd + "/" + user + "/conf.txt", 3);
+                            Dto = Dto + "/" + user + "/" + IDyear;
+                            System.out.println(Dto);
+                            File fl = new File(Dto);
+                            if (!fl.exists()) {
+                                System.out.println("File Dowsnt Exist  " + fl.getAbsolutePath());
+                                Direct(fl);
+                            }
+                            //Configuration wagera
+                            File Par = fl.getParentFile();
+                            copyOnlyFile(curr, Par.getPath());
 
-                if(fl.exists()){
-                    Backup1.main(Dfrom, Dto);
-                    
-                }
-                else{
-                    JLabel label = new JLabel("You not fixed any valid Location for backup !");
-                    label.setFont(new Font("Arial", Font.BOLD, 18));
-                    JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+                            if (fl.isDirectory()) {
+                                if (!fl.exists()) {
+                                    System.out.println("File Dowsnt Exist  " + fl.getAbsolutePath());
+                                    Direct(fl);
+                                }
+
+                                if (fl.exists()) {
+                                    Backup1.main(Dfrom, Dto);
+
+                                } else {
+                                    JLabel label = new JLabel("You not fixed any valid Location for backup !");
+                                    label.setFont(new Font("Arial", Font.BOLD, 18));
+                                    JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+                                }
+                            }
+                        } catch (IOException ex) {
+                            JLabel label = new JLabel("You not fixed any Valid Location for backup so may fix any drive or external hard disk ");
+                            label.setFont(new Font("Arial", Font.BOLD, 18));
+                            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+                            //Logger.getLogger(NewMenuH.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    } else {
+                        System.exit(1);
+                    }
+                } catch (IOException ex) {
+                    System.exit(1);
                 }
             }
-        } catch (IOException ex) {
-            JLabel label = new JLabel("You not fixed any Valid Location for backup so may fix any drive or external hard disk ");
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-            //Logger.getLogger(NewMenuH.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-            }else{
-                System.exit(1);
-            }
-        } catch (IOException ex) {
-            System.exit(1);
-        }
+        });
+
     }
-});
-      
-        
+
+    public void dataExch(String yid, String syr, String eyr) {
+        IDyear = yid;
+        Syear = syr;
+        Eyear = eyr;
     }
-    public void dataExch(String yid, String syr, String eyr){
-        IDyear = yid; Syear = syr; Eyear = eyr;
-    }
- public  void yearsetter(){
+
+    public void yearsetter() {
         // public static void mainn(){
         this.setEnabled(false);
-                  final JFrame ID = new JFrame("Creating Year Book");
-                 JLabel hdlbl = new JLabel(":Creating New Year:");
-                 JLabel lblS = new JLabel("Starting Date of New Year :");
-                 JDateChooser chdS = new JDateChooser();
-                 final JLabel err = new JLabel("");
-                 hdlbl.setBounds(120,20, 200, 30);
-                 lblS.setBounds(50,70,200,30);
-                 chdS.setBounds(200, 70, 200, 30);
-                 chdS.setDateFormatString("dd/MM/yyyy");
-                 chdS.setFont(new java.awt.Font("Tahoma", 3, 22));
-                 JLabel lblE = new JLabel("Starting Date of New Year :");
-                 JDateChooser chdE = new JDateChooser();
-                 lblE.setBounds(50,120,200,30);
-                 chdE.setBounds(200, 120, 200, 30);
-                 chdE.setDateFormatString("dd/MM/yyyy");
-                 chdE.setFont(new java.awt.Font("Tahoma", 3, 22));
-                 chdS.setDate(new Date());
-                 chdE.setDate(new Date());
-                 
-                JButton cancel2 = new JButton("Cancel");
-                JButton confirm = new JButton("Confirm");
-                cancel2.setBounds(150,200,100,30);
-                confirm.setBounds(320,200,100,30);
-                ID.add(hdlbl);
-                ID.add(lblS);
-                ID.add(lblE);
-                ID.add(cancel2);
-                ID.add(confirm);
-                ID.add(err);
-                ID.setLocationRelativeTo(this);
-                ID.add(chdS);
-                ID.add(chdE);
-                ID.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-                  ID.addWindowListener(new WindowAdapter() {
-    public void windowClosing(WindowEvent event) {
-       // System.exit(0);
-    }
-});
-                ID.setSize(500,300);
-                ID.setLayout(null);
-                //ID.setUndecorated(true);
-                ID.setAlwaysOnTop(true);
-                //ID.setModalityExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
-                ID.setVisible(true);
-                ID.setLocationRelativeTo(null);
+        final JFrame ID = new JFrame("Creating Year Book");
+        JLabel hdlbl = new JLabel(":Creating New Year:");
+        JLabel lblS = new JLabel("Starting Date of New Year :");
+        JDateChooser chdS = new JDateChooser();
+        final JLabel err = new JLabel("");
+        hdlbl.setBounds(120, 20, 200, 30);
+        lblS.setBounds(50, 70, 200, 30);
+        chdS.setBounds(200, 70, 200, 30);
+        chdS.setDateFormatString("dd/MM/yyyy");
+        chdS.setFont(new java.awt.Font("Tahoma", 3, 22));
+        JLabel lblE = new JLabel("Starting Date of New Year :");
+        JDateChooser chdE = new JDateChooser();
+        lblE.setBounds(50, 120, 200, 30);
+        chdE.setBounds(200, 120, 200, 30);
+        chdE.setDateFormatString("dd/MM/yyyy");
+        chdE.setFont(new java.awt.Font("Tahoma", 3, 22));
+        chdS.setDate(new Date());
+        chdE.setDate(new Date());
+
+        JButton cancel2 = new JButton("Cancel");
+        JButton confirm = new JButton("Confirm");
+        cancel2.setBounds(150, 200, 100, 30);
+        confirm.setBounds(320, 200, 100, 30);
+        ID.add(hdlbl);
+        ID.add(lblS);
+        ID.add(lblE);
+        ID.add(cancel2);
+        ID.add(confirm);
+        ID.add(err);
+        ID.setLocationRelativeTo(this);
+        ID.add(chdS);
+        ID.add(chdE);
+        ID.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        ID.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent event) {
+                // System.exit(0);
+            }
+        });
+        ID.setSize(500, 300);
+        ID.setLayout(null);
+        //ID.setUndecorated(true);
+        ID.setAlwaysOnTop(true);
+        //ID.setModalityExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        ID.setVisible(true);
+        ID.setLocationRelativeTo(null);
 //##########################################################################
-                // Working of Cancel Button STRAT
-                cancel2.addActionListener(new ActionListener() {
+        // Working of Cancel Button STRAT
+        cancel2.addActionListener(new ActionListener() {
 //this.setEnabled(false);
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Cancel Button is clicked");
-                    //setter();
-                    //code.requestFocus();                            
-                     //ID.dispose();
-                    System.exit(1);
-                
-                }
-                });
-                // Working of Cancel Button OVER
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Cancel Button is clicked");
+                //setter();
+                //code.requestFocus();                            
+                //ID.dispose();
+                System.exit(1);
+
+            }
+        });
+        // Working of Cancel Button OVER
 
 //#######################################################################33
-                // Working of Confirm Button STRAT
-                confirm.addActionListener(new ActionListener() {
+        // Working of Confirm Button STRAT
+        confirm.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                   System.out.println("Action should be taken");
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-Syear = dateFormat.format(chdS.getDate());
-Eyear = dateFormat.format(chdE.getDate());
-String year_id = shortFunction.YearID(Syear, Eyear);
-String addYear = baseadd +"/"+ user +"/"+ "Years.txt";
-if(!DateInBetween.mainn(Syear, Syear, Eyear)){System.out.println("In This trape"); return;}
-boolean b1 = shortFunction.isAlready(Syear,Eyear,addYear);
-boolean b3 = shortFunction.isYear_ID_Already(year_id,addYear);
-System.out.println(b1+"  "+" "+b3);
-
-if(b1||b3){
-    JLabel label = new JLabel("These dates are already exist in some year Account");
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-}else{
-IDyear= year_id;
-ID.setAlwaysOnTop(false);
-int yon = JOptionPane.showConfirmDialog(null,"Do you want to Continue ??","Confirmation .......",JOptionPane.OK_OPTION);
-       
-
-if(yon==0){//YES   
-    System.out.println("Yes we are going inside yes");
-    try {                //set party account to party.txt
-
-                    // out = new PrintWriter(new BufferedWriter(new FileWriter(baseadd +"/"+ user +"/"+ "party/party.txt", true),"UTF-8"));
-                   PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseadd +"/"+ user +"/"+ "Years.txt", true), "UTF-8"));
-                    out.println("1  "+IDyear+","+Syear+","+Eyear);
-                    out.close();
-                } catch (IOException ex) {
-                    JLabel label = new JLabel("Years.txt Problem !!! Error00071");
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-       
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Action should be taken");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Syear = dateFormat.format(chdS.getDate());
+                Eyear = dateFormat.format(chdE.getDate());
+                String year_id = shortFunction.YearID(Syear, Eyear);
+                String addYear = baseadd + "/" + user + "/" + "Years.txt";
+                if (!DateInBetween.mainn(Syear, Syear, Eyear)) {
+                    System.out.println("In This trape");
+                    return;
                 }
-    try {         PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseadd +"/"+ user +"/"+ "CurrentYear.txt", true), "UTF-8"));
-                    out.println(year_id);
-                    out.println(Syear);
-                    out.println(Eyear);
-                    out.close();
-                } catch (IOException ex) {
-                    JLabel label = new JLabel("Years.txt Problem !!! Error00071");
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-       
-                }
-    if(shortFunction.YearSetup(baseadd +"/"+ user,IDyear)){
-                JLabel label = new JLabel("Done Successfully");
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-    }else{
-        JLabel label = new JLabel("There is issue while action");
-            label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-    }
-}
-ID.setAlwaysOnTop(true);
-setter();
+                boolean b1 = shortFunction.isAlready(Syear, Eyear, addYear);
+                boolean b3 = shortFunction.isYear_ID_Already(year_id, addYear);
+                System.out.println(b1 + "  " + " " + b3);
+
+                if (b1 || b3) {
+                    JLabel label = new JLabel("These dates are already exist in some year Account");
+                    label.setFont(new Font("Arial", Font.BOLD, 18));
+                    JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    IDyear = year_id;
+                    ID.setAlwaysOnTop(false);
+                    int yon = JOptionPane.showConfirmDialog(null, "Do you want to Continue ??", "Confirmation .......", JOptionPane.OK_OPTION);
+
+                    if (yon == 0) {//YES   
+                        System.out.println("Yes we are going inside yes");
+                        try {                //set party account to party.txt
+
+                            // out = new PrintWriter(new BufferedWriter(new FileWriter(baseadd +"/"+ user +"/"+ "party/party.txt", true),"UTF-8"));
+                            PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseadd + "/" + user + "/" + "Years.txt", true), "UTF-8"));
+                            out.println("1  " + IDyear + "," + Syear + "," + Eyear);
+                            out.close();
+                        } catch (IOException ex) {
+                            JLabel label = new JLabel("Years.txt Problem !!! Error00071");
+                            label.setFont(new Font("Arial", Font.BOLD, 18));
+                            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+
+                        }
+                        try {
+                            PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseadd + "/" + user + "/" + "CurrentYear.txt", true), "UTF-8"));
+                            out.println(year_id);
+                            out.println(Syear);
+                            out.println(Eyear);
+                            out.close();
+                        } catch (IOException ex) {
+                            JLabel label = new JLabel("Years.txt Problem !!! Error00071");
+                            label.setFont(new Font("Arial", Font.BOLD, 18));
+                            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+
+                        }
+                        if (shortFunction.YearSetup(baseadd + "/" + user, IDyear)) {
+                            JLabel label = new JLabel("Done Successfully");
+                            label.setFont(new Font("Arial", Font.BOLD, 18));
+                            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            JLabel label = new JLabel("There is issue while action");
+                            label.setFont(new Font("Arial", Font.BOLD, 18));
+                            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+                        }
+                    }
+                    ID.setAlwaysOnTop(true);
+                    setter();
 //code.requestFocus();
-ID.dispose();
-}
+                    ID.dispose();
                 }
-                });
+            }
+        });
 
-
-
-                // Working of Confirm Button OVER
+        // Working of Confirm Button OVER
 //######################################################################################3
+    }
 
-         }
- public void setter(){
-          this.setEnabled(true);
-      }
-public void langview(){
-    if(lang.compareToIgnoreCase("English")!=0){
-        
-        //#
-        MMuser.setText(" युजर ");
-        uadd.setText("नया जोड़े");
-        ucp.setText("पासवर्ड बदले");
-        ued.setText("विवरण संपादित करें");
-        uremove.setText("उपयोगकर्ता निकालें");
-        //##
-        MMparty.setText(" पार्टी/विक्रेता ");
-        MPadd.setText("नया जोड़े");
-        MPlist.setText("सब की सूची");
-        MPcs.setText("वर्तमान स्थिति");
-        MPgiven.setText("लेन­देन");
-        MPedit.setText("प्रविष्टि(Entry) संपादित करें");
-        MPbilling.setText("बिलिंग");
-        MPeditAC.setText("खाता विवरण संपादित करें");
-        //###
-        MMcustomer.setText(" ग्राहक/क्रेता ");
-        MCadd.setText("नया जोड़े ");
-        MClist.setText("सब की सूची");
-        MCcs.setText("वर्तमान स्थिति");
-        MCgiven.setText("लेन­देन");
-        MCedit.setText("प्रविष्टि(Entry) संपादित करें");
-        MCbilling.setText("बिलिंग");
-        MCeditAC.setText("खाता विवरण संपादित करें");
-        //####
-        MMitem.setText(" आइटम ");
-        MIadd.setText("नई आइटम जोड़े");
-        MIlist.setText("सब की सूची");
-        MILorder.setText("प्राथमिकता क्रम");
-        MIShortage.setText("स्टॉक की कमी");
-        MIRecent.setText("हाल की दरें ");
-        MIedit.setText("विवरण संपादित करें");
-        //#####
-        MMstock.setText(" स्टॉक ");
-        MSod.setText("तारीख पर");
-        MSod2d.setText("तारीख से तारीख तक");
-        MSod2dwd.setText("विवरण के साथ दिनांक से तारीख तक");
-        MSOrdr.setText("ऑर्डर बुक");
-        //######
-        MMspsts.setText("दुकान की स्थिति");
-        MSPutd.setText("तारीख तक");
-        MSPbwd2d.setText("तारीख से तारीख तक");
-        MSPstock.setText("स्टॉक");
-        //#######
-        MMhelp.setText(" सहायता ");
-        MHcon.setText("संपर्क करें");
-        MHhtu.setText("उपयोग कैसे करे");
-        MHbackup.setText("बैकअप");
-        //#######
-        MMconf.setText(" प्रारूप "); //No hindi
-        MClang.setText("भाषा");
-        MCfinacial.setText("वित्तीय वर्ष");
-        ChangeYear.setText("वित्तीय वर्ष बदलें");
-        CreateYear.setText("वित्तीय वर्ष बनाएं");
-        MCmsg.setText("ग्रीटिंग मैसेज");
-        MCbkupd.setText("बैकअप सेटिंग");
+    public void setter() {
+        this.setEnabled(true);
+    }
+
+    public void langview() {
+        if (lang.compareToIgnoreCase("English") != 0) {
+
+            //#
+            MMuser.setText(" युजर ");
+            uadd.setText("नया जोड़े");
+            ucp.setText("पासवर्ड बदले");
+            ued.setText("विवरण संपादित करें");
+            uremove.setText("उपयोगकर्ता निकालें");
+            //##
+            MMparty.setText(" पार्टी/विक्रेता ");
+            MPadd.setText("नया जोड़े");
+            MPlist.setText("सब की सूची");
+            MPcs.setText("वर्तमान स्थिति");
+            MPgiven.setText("लेन­देन");
+            MPedit.setText("प्रविष्टि(Entry) संपादित करें");
+            MPbilling.setText("बिलिंग");
+            MPeditAC.setText("खाता विवरण संपादित करें");
+            //###
+            MMcustomer.setText(" ग्राहक/क्रेता ");
+            MCadd.setText("नया जोड़े ");
+            MClist.setText("सब की सूची");
+            MCcs.setText("वर्तमान स्थिति");
+            MCgiven.setText("लेन­देन");
+            MCedit.setText("प्रविष्टि(Entry) संपादित करें");
+            MCbilling.setText("बिलिंग");
+            MCeditAC.setText("खाता विवरण संपादित करें");
+            //####
+            MMitem.setText(" आइटम ");
+            MIadd.setText("नई आइटम जोड़े");
+            MIlist.setText("सब की सूची");
+            MILorder.setText("प्राथमिकता क्रम");
+            MIShortage.setText("स्टॉक की कमी");
+            MIRecent.setText("हाल की दरें ");
+            MIedit.setText("विवरण संपादित करें");
+            //#####
+            MMstock.setText(" स्टॉक ");
+            MSod.setText("तारीख पर");
+            MSod2d.setText("तारीख से तारीख तक");
+            MSod2dwd.setText("विवरण के साथ दिनांक से तारीख तक");
+            MSOrdr.setText("ऑर्डर बुक");
+            //######
+            MMspsts.setText("दुकान की स्थिति");
+            MSPutd.setText("तारीख तक");
+            MSPbwd2d.setText("तारीख से तारीख तक");
+            MSPstock.setText("स्टॉक");
+            //#######
+            MMhelp.setText(" सहायता ");
+            MHcon.setText("संपर्क करें");
+            MHhtu.setText("उपयोग कैसे करे");
+            MHbackup.setText("बैकअप");
+            //#######
+            MMconf.setText(" प्रारूप "); //No hindi
+            MClang.setText("भाषा");
+            MCfinacial.setText("वित्तीय वर्ष");
+            ChangeYear.setText("वित्तीय वर्ष बदलें");
+            CreateYear.setText("वित्तीय वर्ष बनाएं");
+            MCmsg.setText("ग्रीटिंग मैसेज");
+            MCbkupd.setText("बैकअप सेटिंग");
         }
-}
-public void iconer(){
-    Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-    System.out.println(dim.getHeight());
-    int width=(int) (dim.getHeight()/15),height=width;
-           ImageIcon imageIcon = new ImageIcon("src/Icons/AddCustomer.png"); // load the image to a imageIcon
-Image image = imageIcon.getImage(); // transform it 
-Image newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);  // transform it back
-edt1.setIcon(imageIcon);
-edt21.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/Taranscation.jpg"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt2.setIcon(imageIcon);
-edt22.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/billing.jpg"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt3.setIcon(imageIcon);
-edt23.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/EditEntries.png"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt4.setIcon(imageIcon);
-edt24.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/List.png"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt5.setIcon(imageIcon);
-edt25.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/Order2.jpg"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt6.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/stock1.jpg"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt26.setIcon(imageIcon);
-imageIcon = new ImageIcon("src/Icons/LogOut.jpg"); // load the image to a imageIcon
- image = imageIcon.getImage(); // transform it 
- newimg = image.getScaledInstance(width, height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
-imageIcon = new ImageIcon(newimg);
-edt7.setIcon(imageIcon);
-edt27.setIcon(imageIcon);
-}
+    }
+
+    public void iconer() {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        System.out.println(dim.getHeight());
+        int width = (int) (dim.getHeight() / 15), height = width;
+        ImageIcon imageIcon = new ImageIcon("src/Icons/AddCustomer.png"); // load the image to a imageIcon
+        Image image = imageIcon.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);  // transform it back
+        edt1.setIcon(imageIcon);
+        edt21.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/Taranscation.jpg"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt2.setIcon(imageIcon);
+        edt22.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/billing.jpg"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt3.setIcon(imageIcon);
+        edt23.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/EditEntries.png"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt4.setIcon(imageIcon);
+        edt24.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/List.png"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt5.setIcon(imageIcon);
+        edt25.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/Order2.jpg"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt6.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/stock1.jpg"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt26.setIcon(imageIcon);
+        imageIcon = new ImageIcon("src/Icons/LogOut.jpg"); // load the image to a imageIcon
+        image = imageIcon.getImage(); // transform it 
+        newimg = image.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);
+        edt7.setIcon(imageIcon);
+        edt27.setIcon(imageIcon);
+    }
+
+    public void dataloader() {
+        Highest_Sold = new PriorityQueue<Tabuler>(new TabulerComparator());
+        String of_ = "customer";
+        if (CMRorPRT_HighestSold.getSelectedIndex() == 1) {
+            of_ = "party";
+        }
+        System.out.println("File Add: " + baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + of_ + ".txt");
+        try {
+            String mnth = String.format("%02d", month_HighestSold.getSelectedIndex() + 1);
+            String name_date = year_HighestSold.getSelectedItem().toString() + mnth + "01";
+            Scanner read = new Scanner(new File(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + of_ + ".txt"), "UTF-8");
+            read.useDelimiter("\\n");
+
+            while (read.hasNext()) // It's for user ... equals to the number of user
+            {
+                String costomer_code = read.nextLine();
+                System.out.println(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + costomer_code + "/Pending/Given/" + name_date + ".txt");
+                File file = new File(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + costomer_code + "/Pending/Given/" + name_date + ".txt");
+                if (file.exists()) {
+                    try {
+                        String str = GetLine.mainn(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + costomer_code + "/Pending/Given/" + name_date + ".txt", 2);
+                        float res = Float.valueOf(str);
+                        System.out.println(costomer_code + " = " + str);
+                        Tabuler candidate_cutomer = new Tabuler(costomer_code, res);
+                        Highest_Sold.add(candidate_cutomer);
+                        System.out.println("\t top ele: " + String.valueOf(Highest_Sold.peek()) + " size(): " + Highest_Sold.size());
+                        if (Highest_Sold.size() > number_in_top) {
+                            Highest_Sold.poll();
+                        }
+                        System.out.println("\t top ele: " + String.valueOf(Highest_Sold.peek()) + " size(): " + Highest_Sold.size());
+
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                        Logger.getLogger(NewMenuH121.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            JLabel label = new JLabel("not getting access to Customer member  !!! Error0007");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+        System.out.println("Showing loaded data in prioirty queue");
+        DefaultTableModel model = (DefaultTableModel) table_HighestSold.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+        while (!Highest_Sold.isEmpty()) {
+            Tabuler cand = Highest_Sold.peek();
+            Highest_Sold.poll();
+            String customer_name = getCustomerName(of_, cand.customer_code);
+            cand.setCustomer_name(customer_name);
+            System.out.println(cand.toString());
+            model.addRow(new Object[]{cand.customer_code, cand.customer_name, cand.customer_sell});
+
+        }
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table_HighestSold.getModel());
+        table_HighestSold.setRowSorter(sorter);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        int columnIndexToSort = 2;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jMenu1 = new javax.swing.JMenu();
-        jPanel1 = new javax.swing.JPanel();
+        pnl_main = new javax.swing.JPanel();
+        pnl_left_shortcuts = new javax.swing.JPanel();
         edt1 = new javax.swing.JLabel();
         edt2 = new javax.swing.JLabel();
         edt3 = new javax.swing.JLabel();
@@ -438,6 +524,22 @@ edt27.setIcon(imageIcon);
         edt5 = new javax.swing.JLabel();
         edt6 = new javax.swing.JLabel();
         edt7 = new javax.swing.JLabel();
+        pnl_graphs = new javax.swing.JPanel();
+        pnl_Graph1 = new javax.swing.JPanel();
+        pnl_Graph2 = new javax.swing.JPanel();
+        pnl_Graph3 = new javax.swing.JPanel();
+        BestBuyer = new javax.swing.JPanel();
+        lbl_HighestSold = new javax.swing.JLabel();
+        pnl_function = new javax.swing.JPanel();
+        CMRorPRT_HighestSold = new javax.swing.JComboBox();
+        interval_HighestSold = new javax.swing.JComboBox();
+        year_HighestSold = new javax.swing.JComboBox();
+        month_HighestSold = new javax.swing.JComboBox();
+        refresh_HighestSold = new javax.swing.JButton();
+        BB_graph = new javax.swing.JScrollPane();
+        table_HighestSold = new javax.swing.JTable();
+        pnl_Graph4 = new javax.swing.JPanel();
+        pnl_right_shortcuts = new javax.swing.JPanel();
         edt21 = new javax.swing.JLabel();
         edt22 = new javax.swing.JLabel();
         edt23 = new javax.swing.JLabel();
@@ -491,6 +593,11 @@ edt27.setIcon(imageIcon);
         CreateYear = new javax.swing.JMenuItem();
         MCmsg = new javax.swing.JMenuItem();
         MCbkupd = new javax.swing.JMenuItem();
+        MManalysis = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         MMhelp = new javax.swing.JMenu();
         MHcon = new javax.swing.JMenuItem();
         MHhtu = new javax.swing.JMenuItem();
@@ -509,16 +616,12 @@ edt27.setIcon(imageIcon);
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        pnl_main.setLayout(new javax.swing.BoxLayout(pnl_main, javax.swing.BoxLayout.X_AXIS));
+
+        pnl_left_shortcuts.setMaximumSize(new java.awt.Dimension(125, 32767));
+        pnl_left_shortcuts.setMinimumSize(new java.awt.Dimension(125, 490));
+        pnl_left_shortcuts.setPreferredSize(new java.awt.Dimension(125, 100));
+        pnl_left_shortcuts.setLayout(new java.awt.GridLayout(7, 1));
 
         edt1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -539,6 +642,7 @@ edt27.setIcon(imageIcon);
                 edt1MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt1);
 
         edt2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -550,6 +654,7 @@ edt27.setIcon(imageIcon);
                 edt2MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt2);
 
         edt3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -561,6 +666,7 @@ edt27.setIcon(imageIcon);
                 edt3MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt3);
 
         edt4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -572,6 +678,7 @@ edt27.setIcon(imageIcon);
                 edt4MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt4);
 
         edt5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -583,6 +690,7 @@ edt27.setIcon(imageIcon);
                 edt5MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt5);
 
         edt6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -594,6 +702,7 @@ edt27.setIcon(imageIcon);
                 edt6MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt6);
 
         edt7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -605,6 +714,155 @@ edt27.setIcon(imageIcon);
                 edt7MouseClicked(evt);
             }
         });
+        pnl_left_shortcuts.add(edt7);
+
+        pnl_main.add(pnl_left_shortcuts);
+
+        pnl_graphs.setBackground(new java.awt.Color(51, 255, 51));
+        pnl_graphs.setLayout(new java.awt.GridLayout(2, 2, 5, 5));
+
+        pnl_Graph1.setBackground(new java.awt.Color(51, 255, 204));
+
+        javax.swing.GroupLayout pnl_Graph1Layout = new javax.swing.GroupLayout(pnl_Graph1);
+        pnl_Graph1.setLayout(pnl_Graph1Layout);
+        pnl_Graph1Layout.setHorizontalGroup(
+            pnl_Graph1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 670, Short.MAX_VALUE)
+        );
+        pnl_Graph1Layout.setVerticalGroup(
+            pnl_Graph1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 351, Short.MAX_VALUE)
+        );
+
+        pnl_graphs.add(pnl_Graph1);
+
+        pnl_Graph2.setBackground(new java.awt.Color(51, 51, 255));
+
+        javax.swing.GroupLayout pnl_Graph2Layout = new javax.swing.GroupLayout(pnl_Graph2);
+        pnl_Graph2.setLayout(pnl_Graph2Layout);
+        pnl_Graph2Layout.setHorizontalGroup(
+            pnl_Graph2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pnl_Graph2Layout.setVerticalGroup(
+            pnl_Graph2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 351, Short.MAX_VALUE)
+        );
+
+        pnl_graphs.add(pnl_Graph2);
+
+        pnl_Graph3.setBackground(new java.awt.Color(102, 153, 0));
+        pnl_Graph3.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        BestBuyer.setBackground(new java.awt.Color(255, 204, 51));
+        BestBuyer.setLayout(new javax.swing.BoxLayout(BestBuyer, javax.swing.BoxLayout.Y_AXIS));
+
+        lbl_HighestSold.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
+        lbl_HighestSold.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_HighestSold.setText("Consumers bought the most");
+        lbl_HighestSold.setAlignmentX(0.5F);
+        lbl_HighestSold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BestBuyer.add(lbl_HighestSold);
+
+        pnl_function.setPreferredSize(new java.awt.Dimension(100, 25));
+        pnl_function.setLayout(new javax.swing.BoxLayout(pnl_function, javax.swing.BoxLayout.X_AXIS));
+
+        CMRorPRT_HighestSold.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Customer", "Party" }));
+        pnl_function.add(CMRorPRT_HighestSold);
+
+        interval_HighestSold.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Monthly", "Yearly" }));
+        interval_HighestSold.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                interval_HighestSoldItemStateChanged(evt);
+            }
+        });
+        pnl_function.add(interval_HighestSold);
+
+        year_HighestSold.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2020", "2021" }));
+        year_HighestSold.setToolTipText("2021");
+        pnl_function.add(year_HighestSold);
+
+        month_HighestSold.setMaximumRowCount(12);
+        month_HighestSold.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
+        pnl_function.add(month_HighestSold);
+
+        refresh_HighestSold.setText("Refresh");
+        refresh_HighestSold.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refresh_HighestSoldActionPerformed(evt);
+            }
+        });
+        pnl_function.add(refresh_HighestSold);
+
+        BestBuyer.add(pnl_function);
+
+        BB_graph.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+
+        table_HighestSold.setAutoCreateRowSorter(true);
+        table_HighestSold.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        table_HighestSold.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Code", "Name", "Amount"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_HighestSold.setRowHeight(30);
+        BB_graph.setViewportView(table_HighestSold);
+
+        BestBuyer.add(BB_graph);
+
+        javax.swing.GroupLayout pnl_Graph3Layout = new javax.swing.GroupLayout(pnl_Graph3);
+        pnl_Graph3.setLayout(pnl_Graph3Layout);
+        pnl_Graph3Layout.setHorizontalGroup(
+            pnl_Graph3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(BestBuyer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        pnl_Graph3Layout.setVerticalGroup(
+            pnl_Graph3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(BestBuyer, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+        );
+
+        pnl_graphs.add(pnl_Graph3);
+
+        pnl_Graph4.setBackground(new java.awt.Color(255, 204, 204));
+        pnl_Graph4.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        javax.swing.GroupLayout pnl_Graph4Layout = new javax.swing.GroupLayout(pnl_Graph4);
+        pnl_Graph4.setLayout(pnl_Graph4Layout);
+        pnl_Graph4Layout.setHorizontalGroup(
+            pnl_Graph4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 660, Short.MAX_VALUE)
+        );
+        pnl_Graph4Layout.setVerticalGroup(
+            pnl_Graph4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 341, Short.MAX_VALUE)
+        );
+
+        pnl_graphs.add(pnl_Graph4);
+
+        pnl_main.add(pnl_graphs);
+
+        pnl_right_shortcuts.setMaximumSize(new java.awt.Dimension(125, 32767));
+        pnl_right_shortcuts.setMinimumSize(new java.awt.Dimension(125, 490));
+        pnl_right_shortcuts.setPreferredSize(new java.awt.Dimension(125, 100));
+        pnl_right_shortcuts.setLayout(new java.awt.GridLayout(7, 1));
 
         edt21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -616,6 +874,7 @@ edt27.setIcon(imageIcon);
                 edt21MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt21);
 
         edt22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -627,6 +886,7 @@ edt27.setIcon(imageIcon);
                 edt22MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt22);
 
         edt23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -638,6 +898,7 @@ edt27.setIcon(imageIcon);
                 edt23MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt23);
 
         edt24.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -649,6 +910,7 @@ edt27.setIcon(imageIcon);
                 edt24MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt24);
 
         edt25.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -660,6 +922,7 @@ edt27.setIcon(imageIcon);
                 edt25MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt25);
 
         edt26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -671,6 +934,7 @@ edt27.setIcon(imageIcon);
                 edt26MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt26);
 
         edt27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
@@ -682,6 +946,9 @@ edt27.setIcon(imageIcon);
                 edt27MouseClicked(evt);
             }
         });
+        pnl_right_shortcuts.add(edt27);
+
+        pnl_main.add(pnl_right_shortcuts);
 
         usd.setText("usd");
         usd.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1062,6 +1329,28 @@ edt27.setIcon(imageIcon);
 
         Menu.add(MMconf);
 
+        MManalysis.setText(" Analysis");
+        MManalysis.setActionCommand(" Analysis ");
+        MManalysis.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
+
+        jMenuItem1.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
+        jMenuItem1.setText("Market Analysis");
+        MManalysis.add(jMenuItem1);
+
+        jMenuItem3.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
+        jMenuItem3.setText("Stock Analysis");
+        MManalysis.add(jMenuItem3);
+
+        jMenuItem2.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
+        jMenuItem2.setText("Best and Worst");
+        MManalysis.add(jMenuItem2);
+
+        jMenuItem4.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
+        jMenuItem4.setText("Market Trade");
+        MManalysis.add(jMenuItem4);
+
+        Menu.add(MManalysis);
+
         MMhelp.setText(" Help ");
         MMhelp.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
@@ -1100,191 +1389,122 @@ edt27.setIcon(imageIcon);
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnl_main, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(edt6, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(edt26, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(edt2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt1, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(edt21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                            .addComponent(edt22, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt23, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt24, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(edt25, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(edt7, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(edt27, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(20, 20, 20))
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(640, 640, 640)
-                        .addComponent(usd)))
-                .addContainerGap(749, Short.MAX_VALUE))
+                .addComponent(usd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edt21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(edt1, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edt2, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(edt22)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edt3, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(edt23)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(edt4, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(edt24)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(edt5)
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(edt6)
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(edt7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                        .addComponent(usd)
-                        .addGap(56, 56, 56))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(edt25, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(edt26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addComponent(edt27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(104, 104, 104))))
+                .addComponent(pnl_main, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(usd))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void uremoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uremoveActionPerformed
-        new NewUserRemove(baseadd,logo).setVisible(true);
+        new NewUserRemove(baseadd, logo).setVisible(true);
     }//GEN-LAST:event_uremoveActionPerformed
 
     private void MPlistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPlistActionPerformed
-        new NewPRTlist2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewPRTlist2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPlistActionPerformed
 
     private void MPbillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPbillingActionPerformed
-            new PRTxBillingNewMono2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new PRTxBillingNewMono2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPbillingActionPerformed
 
     private void uaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uaddActionPerformed
-new NewUserAdd(baseadd,logo).setVisible(true);
-        
+        new NewUserAdd(baseadd, logo).setVisible(true);
+
     }//GEN-LAST:event_uaddActionPerformed
 
     private void ucpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ucpActionPerformed
-        new NewUserEdit(baseadd,logo).setVisible(true);
+        new NewUserEdit(baseadd, logo).setVisible(true);
     }//GEN-LAST:event_ucpActionPerformed
 
     private void MPaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPaddActionPerformed
 //        System.out.println("poseiherohire");
-        new NewPRTadd2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewPRTadd2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPaddActionPerformed
 
     private void MPcsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPcsActionPerformed
-            new NewDxPRTxSTS2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxPRTxSTS2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPcsActionPerformed
 
     private void MPgivenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPgivenActionPerformed
-            new NewDxPRTxCASHxGiven2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxPRTxCASHxGiven2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPgivenActionPerformed
 
     private void MPeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPeditActionPerformed
-        new NewPRTxEDT(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewPRTxEDT(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPeditActionPerformed
 
     private void MPeditACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MPeditACActionPerformed
-        new NewPRTxACxEDT2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewPRTxACxEDT2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MPeditACActionPerformed
 
     private void MCaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCaddActionPerformed
-            new NewCMRadd2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewCMRadd2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MCaddActionPerformed
 
     private void MClistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MClistActionPerformed
-            new NewCMRlist2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewCMRlist2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MClistActionPerformed
 
     private void MCcsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCcsActionPerformed
-            new NewDxCMRxSTS2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxCMRxSTS2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MCcsActionPerformed
 
     private void MCgivenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCgivenActionPerformed
-            new NewDxCMRxCASHxGiven2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxCMRxCASHxGiven2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MCgivenActionPerformed
 
     private void MCeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCeditActionPerformed
-            new NewCMRxEDT(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewCMRxEDT(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MCeditActionPerformed
 
     private void MCbillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCbillingActionPerformed
-            new CMRxBillingNewMono2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new CMRxBillingNewMono2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MCbillingActionPerformed
 
     private void MCeditACActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCeditACActionPerformed
-            new NewCMRxACxEDT2(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewCMRxACxEDT2(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MCeditACActionPerformed
 
     private void MIaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MIaddActionPerformed
-            new NewITMadd(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewITMadd(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MIaddActionPerformed
 
     private void MIlistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MIlistActionPerformed
-        new NewITMlist(baseadd,logo ,IDyear,Syear,Eyear).setVisible(true);
+        new NewITMlist(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MIlistActionPerformed
 
     private void MIeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MIeditActionPerformed
-        new NewITMxEdit(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewITMxEdit(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MIeditActionPerformed
 
     private void MSodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSodActionPerformed
-        new NewDxITMxStatusOnD(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxITMxStatusOnD(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSodActionPerformed
 
     private void MSod2dActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSod2dActionPerformed
-            new NewDxITMxStatusOnD2D(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxITMxStatusOnD2D(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSod2dActionPerformed
 
     private void MSod2dwdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSod2dwdActionPerformed
-                new NewDxITMxStatusOnD2DWD(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxITMxStatusOnD2DWD(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSod2dwdActionPerformed
 
     private void MHconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHconActionPerformed
-       try {
-           new Contect(logo).setVisible(true);
-       } catch (InterruptedException ex) {
-           Logger.getLogger(NewMenuH121.class.getName()).log(Level.SEVERE, null, ex);
-       }
+        try {
+            new Contect(logo).setVisible(true);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(NewMenuH121.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_MHconActionPerformed
 
     private void MHhtuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHhtuActionPerformed
@@ -1293,127 +1513,130 @@ new NewUserAdd(baseadd,logo).setVisible(true);
 
     private void uedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uedActionPerformed
         // TODO add your handling code here:
-new NewUserEDT(baseadd , logo).setVisible(true);
+        new NewUserEDT(baseadd, logo).setVisible(true);
     }//GEN-LAST:event_uedActionPerformed
 
     private void MClangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MClangActionPerformed
-         new langC(baseadd,logo).setVisible(true);
+        new langC(baseadd, logo).setVisible(true);
     }//GEN-LAST:event_MClangActionPerformed
 
     private void MCmsgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCmsgActionPerformed
-       try {
-           new msg(baseadd,logo).setVisible(true);
-       } catch (IOException ex) {
-           JLabel label = new JLabel("Language Setting Not Updated");
+        try {
+            new msg(baseadd, logo).setVisible(true);
+        } catch (IOException ex) {
+            JLabel label = new JLabel("Language Setting Not Updated");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-       }
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_MCmsgActionPerformed
 
     private void MCbkupdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MCbkupdActionPerformed
-       try {
-           // TODO add your handling code here:
-           new bkup(baseadd,logo).setVisible(true);
-       } catch (IOException ex) {
-           JLabel label = new JLabel("backup Location Not Updated");
+        try {
+            // TODO add your handling code here:
+            new bkup(baseadd, logo).setVisible(true);
+        } catch (IOException ex) {
+            JLabel label = new JLabel("backup Location Not Updated");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-       }
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
     }//GEN-LAST:event_MCbkupdActionPerformed
 
     private void MSOrdrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSOrdrActionPerformed
         // TODO add your handling code here:
-        new NewDxOrderxStatusOn(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxOrderxStatusOn(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSOrdrActionPerformed
 
     private void MSPstockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSPstockActionPerformed
-new NewDxITMxStatusOnD(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxITMxStatusOnD(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSPstockActionPerformed
 
     private void MSPbwd2dActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSPbwd2dActionPerformed
-        new ITMxRate2D2Dup(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new ITMxRate2D2Dup(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSPbwd2dActionPerformed
 
     private void MSPutdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MSPutdActionPerformed
-        new ITMxRate(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new ITMxRate(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MSPutdActionPerformed
 
     private void MILorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MILorderActionPerformed
-new ItemxOrder(baseadd , logo,IDyear,Syear,Eyear).setVisible(true);
+        new ItemxOrder(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MILorderActionPerformed
-public void Direct(File fl){
-    if(fl.exists()) return;
-    System.out.println("File Dowsnt Exist  "+fl.getAbsolutePath());
-    Direct(fl.getParentFile());
-    fl.mkdir();
-}
-public void copyfiles(File f1, File f2){
-         try {
-                        PrintWriter out ;
-                        out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f2.getPath()), "UTF-8"));
-                        Scanner Sc = new Scanner(f1,"UTF-8");
-                        while(Sc.hasNext()){
-                            String str = Sc.nextLine();
-                            out.println(str);
-                                                       
-                        }
-                        Sc.close();
-                        out.close();
-                        } catch (IOException p) {
-                            JLabel label = new JLabel("Default Configuration Not backed!!! Error0005"+p);
-                        label.setFont(new Font("Arial", Font.BOLD, 18));
-                        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.ERROR_MESSAGE);
-                        }
-}
-public void copyOnlyFile(String flfrom,String flto){
-    copyfiles(new File(flfrom+"/"+user+".txt"),new File(flto+"/"+user+".txt"));
-    copyfiles(new File(flfrom+"/conf.txt"),new File(flto+"/conf.txt"));
-    copyfiles(new File(flfrom+"/CurrentYear.txt"),new File(flto+"/CurrentYear.txt"));
-    copyfiles(new File(flfrom+"/sdata.txt"),new File(flto+"/sdata.txt"));
-    copyfiles(new File(flfrom+"/Years.txt"),new File(flto+"/Years.txt"));
-    
-}
+    public void Direct(File fl) {
+        if (fl.exists()) {
+            return;
+        }
+        System.out.println("File Dowsnt Exist  " + fl.getAbsolutePath());
+        Direct(fl.getParentFile());
+        fl.mkdir();
+    }
+
+    public void copyfiles(File f1, File f2) {
+        try {
+            PrintWriter out;
+            out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(f2.getPath()), "UTF-8"));
+            Scanner Sc = new Scanner(f1, "UTF-8");
+            while (Sc.hasNext()) {
+                String str = Sc.nextLine();
+                out.println(str);
+
+            }
+            Sc.close();
+            out.close();
+        } catch (IOException p) {
+            JLabel label = new JLabel("Default Configuration Not backed!!! Error0005" + p);
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void copyOnlyFile(String flfrom, String flto) {
+        copyfiles(new File(flfrom + "/" + user + ".txt"), new File(flto + "/" + user + ".txt"));
+        copyfiles(new File(flfrom + "/conf.txt"), new File(flto + "/conf.txt"));
+        copyfiles(new File(flfrom + "/CurrentYear.txt"), new File(flto + "/CurrentYear.txt"));
+        copyfiles(new File(flfrom + "/sdata.txt"), new File(flto + "/sdata.txt"));
+        copyfiles(new File(flfrom + "/Years.txt"), new File(flto + "/Years.txt"));
+
+    }
     private void MHbackupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MHbackupActionPerformed
         // TODO add your handling code here:
 
         //new Animator().setVisible(true);
         //ProgressBarDemo.main();
-        String Dfrom =baseadd+"/"+user+"/"+IDyear;
-        String Dto = "E:/Backup" ;
-        String curr =baseadd+"/"+user;
+        String Dfrom = baseadd + "/" + user + "/" + IDyear;
+        String Dto = "E:/Backup";
+        String curr = baseadd + "/" + user;
         try {
-            Dto = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 3);
-            Dto = Dto+"/"+user+"/"+IDyear;
+            Dto = GetLine.mainn(baseadd + "/" + user + "/conf.txt", 3);
+            Dto = Dto + "/" + user + "/" + IDyear;
             System.out.println(Dto);
             File fl = new File(Dto);
-            if(!fl.exists()){
-                System.out.println("File Dowsnt Exist  "+fl.getAbsolutePath());
-                    Direct(fl);
+            if (!fl.exists()) {
+                System.out.println("File Dowsnt Exist  " + fl.getAbsolutePath());
+                Direct(fl);
             }
             //Configuration wagera
             File Par = fl.getParentFile();
-            copyOnlyFile(curr,Par.getPath());
-            
-            if(fl.isDirectory()){
-                if(!fl.exists()){
-                    System.out.println("File Dowsnt Exist  "+fl.getAbsolutePath());
+            copyOnlyFile(curr, Par.getPath());
+
+            if (fl.isDirectory()) {
+                if (!fl.exists()) {
+                    System.out.println("File Dowsnt Exist  " + fl.getAbsolutePath());
                     Direct(fl);
                 }
 
-                if(fl.exists()){
+                if (fl.exists()) {
                     Backup1.main(Dfrom, Dto);
-                    
-                }
-                else{
+
+                } else {
                     JLabel label = new JLabel("You not fixed any valid Location for backup !");
                     label.setFont(new Font("Arial", Font.BOLD, 18));
-                    JOptionPane.showMessageDialog(this,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(this, label, "ERROR", JOptionPane.WARNING_MESSAGE);
                 }
             }
         } catch (IOException ex) {
             JLabel label = new JLabel("You not fixed any Valid Location for backup so may fix any drive or external hard disk ");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(this,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, label, "ERROR", JOptionPane.WARNING_MESSAGE);
             //Logger.getLogger(NewMenuH.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -1424,87 +1647,87 @@ public void copyOnlyFile(String flfrom,String flto){
     }//GEN-LAST:event_edt1AncestorAdded
 
     private void edt1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt1MouseClicked
-            if(evt.getClickCount()==2){
-                MCadd.doClick();
-            }
+        if (evt.getClickCount() == 2) {
+            MCadd.doClick();
+        }
     }//GEN-LAST:event_edt1MouseClicked
 
     private void edt2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt2MouseClicked
-           if(evt.getClickCount()==2){ 
-               MCgiven.doClick();
-                }
+        if (evt.getClickCount() == 2) {
+            MCgiven.doClick();
+        }
     }//GEN-LAST:event_edt2MouseClicked
 
     private void edt3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt3MouseClicked
-            if(evt.getClickCount()==2){
-                MCbilling.doClick();
-            }
+        if (evt.getClickCount() == 2) {
+            MCbilling.doClick();
+        }
     }//GEN-LAST:event_edt3MouseClicked
 
     private void edt4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt4MouseClicked
-           if(evt.getClickCount()==2){
-               MCedit.doClick();
-           }
+        if (evt.getClickCount() == 2) {
+            MCedit.doClick();
+        }
     }//GEN-LAST:event_edt4MouseClicked
 
     private void edt5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt5MouseClicked
-            if(evt.getClickCount()==2){
-                MClist.doClick();
-            }
+        if (evt.getClickCount() == 2) {
+            MClist.doClick();
+        }
     }//GEN-LAST:event_edt5MouseClicked
 
     private void edt6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt6MouseClicked
-            if(evt.getClickCount()==2){
-                MIShortage.doClick();
-            }
+        if (evt.getClickCount() == 2) {
+            MIShortage.doClick();
+        }
     }//GEN-LAST:event_edt6MouseClicked
 
     private void edt7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt7MouseClicked
-             this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); 
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_edt7MouseClicked
 
     private void edt21MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt21MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             MPadd.doClick();
         }
     }//GEN-LAST:event_edt21MouseClicked
 
     private void edt22MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt22MouseClicked
-            if(evt.getClickCount()==2){
-                MPgiven.doClick();
-            }
+        if (evt.getClickCount() == 2) {
+            MPgiven.doClick();
+        }
     }//GEN-LAST:event_edt22MouseClicked
 
     private void edt23MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt23MouseClicked
-           if(evt.getClickCount()==2){
-               MPbilling.doClick();
-           }
+        if (evt.getClickCount() == 2) {
+            MPbilling.doClick();
+        }
     }//GEN-LAST:event_edt23MouseClicked
 
     private void edt24MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt24MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             MPedit.doClick();
         }
     }//GEN-LAST:event_edt24MouseClicked
 
     private void edt25MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt25MouseClicked
-        if(evt.getClickCount()==2){
+        if (evt.getClickCount() == 2) {
             MPlist.doClick();
         }
     }//GEN-LAST:event_edt25MouseClicked
 
     private void edt26MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt26MouseClicked
-                if(evt.getClickCount()==2){
-                    MSod2dwd.doClick();
-                }
+        if (evt.getClickCount() == 2) {
+            MSod2dwd.doClick();
+        }
     }//GEN-LAST:event_edt26MouseClicked
 
     private void edt27MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_edt27MouseClicked
-             this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)); 
+        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }//GEN-LAST:event_edt27MouseClicked
 
     private void MIShortageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MIShortageActionPerformed
-        new NewDxOrderxStatusOn(baseadd,logo,IDyear,Syear,Eyear).setVisible(true);
+        new NewDxOrderxStatusOn(baseadd, logo, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MIShortageActionPerformed
 
     private void formFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusGained
@@ -1516,19 +1739,19 @@ public void copyOnlyFile(String flfrom,String flto){
     }//GEN-LAST:event_formFocusLost
 
     private void MIRecentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MIRecentActionPerformed
-        new Recent(baseadd,logo,user,lang,IDyear,Syear,Eyear).setVisible(true);
+        new Recent(baseadd, logo, user, lang, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_MIRecentActionPerformed
 
     private void CreateYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateYearActionPerformed
-        new CreateNewYear(baseadd+"/"+user,IDyear).setVisible(true);
+        new CreateNewYear(baseadd + "/" + user, IDyear).setVisible(true);
     }//GEN-LAST:event_CreateYearActionPerformed
 
     private void ChangeYearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChangeYearActionPerformed
-        new YearChanger(baseadd+"/"+user,IDyear,Syear,Eyear).setVisible(true);
+        new YearChanger(baseadd + "/" + user, IDyear, Syear, Eyear).setVisible(true);
     }//GEN-LAST:event_ChangeYearActionPerformed
 
     private void ChangeYearFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_ChangeYearFocusLost
-      
+
     }//GEN-LAST:event_ChangeYearFocusLost
 
     private void usdMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_usdMouseClicked
@@ -1536,7 +1759,70 @@ public void copyOnlyFile(String flfrom,String flto){
         System.out.println(Syear);
         System.out.println(Eyear);
     }//GEN-LAST:event_usdMouseClicked
-boolean vb=false;
+
+    private void interval_HighestSoldItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_interval_HighestSoldItemStateChanged
+        if (interval_HighestSold.getSelectedIndex() == 0) {
+            //show data day wise unblock month
+            month_HighestSold.setEnabled(true);
+        } else {
+            //show data monthly and block month selection
+            month_HighestSold.setEnabled(false);
+        }
+    }//GEN-LAST:event_interval_HighestSoldItemStateChanged
+
+    private void refresh_HighestSoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_HighestSoldActionPerformed
+        dataloader();
+        if (CMRorPRT_HighestSold.getSelectedIndex() == 0) {
+            lbl_HighestSold.setText("These consumers bought the most");
+        } else {
+            lbl_HighestSold.setText("These suppliers were paid the most");
+        }
+    }//GEN-LAST:event_refresh_HighestSoldActionPerformed
+
+    private String getCustomerName(String of_, String customer_code) {
+        String res = "Unknown";
+        try {
+            res = GetLine.mainn(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + customer_code + "/profile.txt", 2);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return res;
+    }
+
+    class Tabuler {
+
+        String customer_code;
+        String customer_name;
+        float customer_sell;
+
+        public Tabuler(String customer_code, float customer_sell) {
+            this.customer_code = customer_code;
+            this.customer_sell = customer_sell;
+        }
+
+        public void setCustomer_name(String customer_name) {
+            this.customer_name = customer_name;
+        }
+
+        public String toString() {
+            return customer_code + " : " + customer_name + " : " + customer_sell;
+        }
+
+    }
+
+    class TabulerComparator implements Comparator<Tabuler> {
+
+        @Override
+        public int compare(Tabuler o1, Tabuler o2) {
+            if (o1.customer_sell > o2.customer_sell) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -132638,12 +132924,15 @@ boolean vb=false;
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NewMenuH121("D:/Shopy/Shopy","src/Icons/logo.png").setVisible(true);
+                new NewMenuH121("D:/Shopy/Shopy", "src/Icons/logo.png").setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane BB_graph;
+    private javax.swing.JPanel BestBuyer;
+    private javax.swing.JComboBox CMRorPRT_HighestSold;
     private javax.swing.JMenuItem ChangeYear;
     private javax.swing.JMenuItem CreateYear;
     private javax.swing.JMenuItem MCadd;
@@ -132666,6 +132955,7 @@ boolean vb=false;
     private javax.swing.JMenuItem MIadd;
     private javax.swing.JMenuItem MIedit;
     private javax.swing.JMenuItem MIlist;
+    private javax.swing.JMenu MManalysis;
     private javax.swing.JMenu MMconf;
     private javax.swing.JMenu MMcustomer;
     private javax.swing.JMenu MMhelp;
@@ -132703,20 +132993,31 @@ boolean vb=false;
     private javax.swing.JLabel edt5;
     private javax.swing.JLabel edt6;
     private javax.swing.JLabel edt7;
+    private javax.swing.JComboBox interval_HighestSold;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JLabel lbl_HighestSold;
+    private javax.swing.JComboBox month_HighestSold;
+    private javax.swing.JPanel pnl_Graph1;
+    private javax.swing.JPanel pnl_Graph2;
+    private javax.swing.JPanel pnl_Graph3;
+    private javax.swing.JPanel pnl_Graph4;
+    private javax.swing.JPanel pnl_function;
+    private javax.swing.JPanel pnl_graphs;
+    private javax.swing.JPanel pnl_left_shortcuts;
+    private javax.swing.JPanel pnl_main;
+    private javax.swing.JPanel pnl_right_shortcuts;
+    private javax.swing.JButton refresh_HighestSold;
+    private javax.swing.JTable table_HighestSold;
     private javax.swing.JMenuItem uadd;
     private javax.swing.JMenuItem ucp;
     private javax.swing.JMenuItem ued;
     private javax.swing.JMenuItem uremove;
     private javax.swing.JLabel usd;
+    private javax.swing.JComboBox year_HighestSold;
     // End of variables declaration//GEN-END:variables
 
-//    @Override
-//    public void chnger(String idyr, String syr, String eyr) {
-//        IDyear = idyr;
-//        Syear = syr;
-//        Eyear = eyr;
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
 }

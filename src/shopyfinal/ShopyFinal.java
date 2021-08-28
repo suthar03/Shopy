@@ -33,11 +33,7 @@ public class ShopyFinal {
                int yon = JOptionPane.showConfirmDialog(null,"Are you here for first time ?","Confirmation ....",JOptionPane.OK_OPTION);
         if(yon==0){//YES 
             //Create a baseadd directory
-            File nf1 = nf.getParentFile();
-            File nf2 = nf1.getParentFile();
-            if(!nf2.exists()){nf2.mkdir(); }
-            if(!nf1.exists()){nf1.mkdir(); }
-            if(!nf.exists()){nf.mkdir(); }
+            if(!nf.exists()){nf.mkdirs(); }
         }else{
              JLabel label1 = new JLabel("There Is Problem of base Directory");        
         label1.setFont(new Font("Arial", Font.BOLD, 18));        
@@ -46,7 +42,8 @@ public class ShopyFinal {
         }
             
     
-            new NewPassword1(baseadd,logo).setVisible(true);
+            User.setBaseAdd(baseadd);
+            new NewPassword2().setVisible(true);
         } catch (IOException ex) {
             JLabel label1 = new JLabel("There Is Problem At Initial"+ex);        
         label1.setFont(new Font("Arial", Font.BOLD, 18));        
