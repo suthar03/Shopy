@@ -39,29 +39,30 @@ import javax.swing.table.TableModel;
  */
 public class ITMxStatusOnD2DWD extends javax.swing.JFrame {
 
-    String baseadd,logo,ITMadd,CMRadd,Add,PRTadd,user,dt1,dt2,ndt,lang="English";
-    String IDyear="2020-2020",Syear="01/01/2020",Eyear="01/01/2020",SSyear="01/01/2020";
-    String curnc="cash";
-    Float np=(float)0,ns=(float)0,ncs=(float)0,ncp=(float)0;
-    public ITMxStatusOnD2DWD(String base,String golo,String sd1 ,String sd2,String idy, String sy,String ey) {
-         baseadd=base;
-         logo=golo;
-         IDyear = idy;
+    String baseadd, logo, ITMadd, CMRadd, Add, PRTadd, user, dt1, dt2, ndt, lang = "English";
+    String IDyear = "2020-2020", Syear = "01/01/2020", Eyear = "01/01/2020", SSyear = "01/01/2020";
+    String curnc = "cash";
+    Float np = (float) 0, ns = (float) 0, ncs = (float) 0, ncp = (float) 0;
+
+    public ITMxStatusOnD2DWD(String base, String golo, String sd1, String sd2, String idy, String sy, String ey) {
+        baseadd = base;
+        logo = golo;
+        IDyear = idy;
         Syear = sy;
         Eyear = ey;
         SSyear = NamingDate.mainn(Syear);
-        dt1=sd1;
-        dt2=sd2;
+        dt1 = sd1;
+        dt2 = sd2;
         ndt = NamingDate.mainn(sd1);
         try {
-            user = GetLine.mainn(baseadd+"/Cuser.txt", 2);
+            user = GetLine.mainn(baseadd + "/Cuser.txt", 2);
         } catch (IOException ex) {
             Logger.getLogger(ITMxStatusOnD2DWD.class.getName()).log(Level.SEVERE, null, ex);
             //errmessage.mainn("dfghjkhg", 200, 200);
         }
-        ITMadd = baseadd+"/"+user+"/"+IDyear+"/item";
-        CMRadd = baseadd+"/"+user+"/"+IDyear+"/customer";
-        PRTadd = baseadd+"/"+user+"/"+IDyear+"/party";
+        ITMadd = baseadd + "/" + user + "/" + IDyear + "/item";
+        CMRadd = baseadd + "/" + user + "/" + IDyear + "/customer";
+        PRTadd = baseadd + "/" + user + "/" + IDyear + "/party";
         initComponents();
         //this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -70,37 +71,36 @@ public class ITMxStatusOnD2DWD extends javax.swing.JFrame {
         } catch (IOException ex) {
             JLabel label = new JLabel("Logo Problem !!! Error0001");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
-        
+
         try {
-        Robot r=new Robot();
-        r.keyPress(KeyEvent.VK_ALT);
-        r.keyPress(KeyEvent.VK_SHIFT);
-        r.keyPress(KeyEvent.VK_0);
-        r.keyRelease(KeyEvent.VK_0);
-        r.keyRelease(KeyEvent.VK_SHIFT);
-        r.keyRelease(KeyEvent.VK_ALT);
-    } catch (AWTException ex) {
-        JLabel label = new JLabel("Language Setup Error !!");        
-        label.setFont(new Font("Arial", Font.BOLD, 18));        
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-    }
-        
-        
+            Robot r = new Robot();
+            r.keyPress(KeyEvent.VK_ALT);
+            r.keyPress(KeyEvent.VK_SHIFT);
+            r.keyPress(KeyEvent.VK_0);
+            r.keyRelease(KeyEvent.VK_0);
+            r.keyRelease(KeyEvent.VK_SHIFT);
+            r.keyRelease(KeyEvent.VK_ALT);
+        } catch (AWTException ex) {
+            JLabel label = new JLabel("Language Setup Error !!");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+
         try {
-        lang = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 1);
+            lang = GetLine.mainn(baseadd + "/" + user + "/conf.txt", 1);
         } catch (IOException ex) {
-        JLabel label = new JLabel("Configuration Error !!! Error0003");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JLabel label = new JLabel("Configuration Error !!! Error0003");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
 //##################################################################################################################################
-        String sdf = "From : "+sd1+"  To : "+sd2;
+        String sdf = "From : " + sd1 + "  To : " + sd2;
         date.setText(sdf);
 
 //##################################################################################################################################
-stocker();
+        stocker();
     }
 
     @SuppressWarnings("unchecked")
@@ -322,39 +322,42 @@ stocker();
     private void cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelActionPerformed
         this.dispose();
     }//GEN-LAST:event_cancelActionPerformed
-int i=0;
+    int i = 0;
     private void srcKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_srcKeyReleased
-    final TableModel tm = table.getModel();
-        int t=table.getRowCount();
-        i=table.getSelectedRow();
-        if(i==t-1) i=0;
-        System.out.println("Toatal Rows::"+t);
-        String tb;
-        tb=src.getText().toUpperCase();
-        if(evt.getKeyCode()!=KeyEvent.VK_ENTER){
-            i=0;
-        }else ++i;
-                
-        
-       for(;i<t;++i){ 
-           System.out.println(tb+"::"+i+" :"+String.valueOf(tm.getValueAt(i, 2)).toUpperCase().contains(tb)+":"+String.valueOf(tm.getValueAt(i, 3)).toUpperCase()+":"+String.valueOf(tm.getValueAt(i, 3)).toUpperCase().contains(tb)+","+String.valueOf(tm.getValueAt(i, 4)).toUpperCase().contains(tb)+","+String.valueOf(tm.getValueAt(i, 1)).toUpperCase().contains(tb)+"\n");
-           if(((String.valueOf(tm.getValueAt(i, 2)).toUpperCase().contains(tb))||String.valueOf(tm.getValueAt(i, 3)).toUpperCase().contains(tb))||(String.valueOf(tm.getValueAt(i, 4)).toUpperCase().contains(tb)||String.valueOf(tm.getValueAt(i, 1)).toUpperCase().contains(tb))){
-                        
-                        table.setRowSelectionInterval(i, i);
-                        table.getSelectionModel().setSelectionInterval(i, i);
-                        table.scrollRectToVisible(new Rectangle(table.getCellRect(i+5, 0, true)));
-                        break;
+        final TableModel tm = table.getModel();
+        int t = table.getRowCount();
+        i = table.getSelectedRow();
+        if (i == t - 1) {
+            i = 0;
         }
-       }
-       if(i==t){//Nothing is found
-           table.clearSelection();
-       }
+        System.out.println("Toatal Rows::" + t);
+        String tb;
+        tb = src.getText().toUpperCase();
+        if (evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            i = 0;
+        } else {
+            ++i;
+        }
+
+        for (; i < t; ++i) {
+            System.out.println(tb + "::" + i + " :" + String.valueOf(tm.getValueAt(i, 2)).toUpperCase().contains(tb) + ":" + String.valueOf(tm.getValueAt(i, 3)).toUpperCase() + ":" + String.valueOf(tm.getValueAt(i, 3)).toUpperCase().contains(tb) + "," + String.valueOf(tm.getValueAt(i, 4)).toUpperCase().contains(tb) + "," + String.valueOf(tm.getValueAt(i, 1)).toUpperCase().contains(tb) + "\n");
+            if (((String.valueOf(tm.getValueAt(i, 2)).toUpperCase().contains(tb)) || String.valueOf(tm.getValueAt(i, 3)).toUpperCase().contains(tb)) || (String.valueOf(tm.getValueAt(i, 4)).toUpperCase().contains(tb) || String.valueOf(tm.getValueAt(i, 1)).toUpperCase().contains(tb))) {
+
+                table.setRowSelectionInterval(i, i);
+                table.getSelectionModel().setSelectionInterval(i, i);
+                table.scrollRectToVisible(new Rectangle(table.getCellRect(i + 5, 0, true)));
+                break;
+            }
+        }
+        if (i == t) {//Nothing is found
+            table.clearSelection();
+        }
     }//GEN-LAST:event_srcKeyReleased
 
     private void srcKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_srcKeyTyped
         // TODO add your handling code here:
         char c = evt.getKeyChar();
-        if(c==10){    //
+        if (c == 10) {    //
             getToolkit().beep();
             evt.consume();
         }
@@ -362,31 +365,32 @@ int i=0;
 
     private void refActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refActionPerformed
         // TODO add your handling code here:
-stocker();
+        stocker();
     }//GEN-LAST:event_refActionPerformed
-public void setter(){
-          this.setEnabled(true);
-      }
-    public  void daty(){
+    public void setter() {
+        this.setEnabled(true);
+    }
+
+    public void daty() {
         // public static void mainn(){
         this.setEnabled(false);
-                  final JFrame ID = new JFrame("Changing Date");
-                 JLabel hdlbl = new JLabel(": Select a Date :");
-                 JLabel lbl1 = new JLabel("Date From:");
-                 JLabel lbl2 = new JLabel("       To:");
-                 JDateChooser chd1 = new JDateChooser();
-                 JDateChooser chd2 = new JDateChooser();
-                 final JLabel err = new JLabel("");
-                 hdlbl.setBounds(120,20, 100, 30);
-                 lbl1.setBounds(50,70,100,30);
-                 lbl2.setBounds(50,100,100,30);
-                 chd1.setBounds(100, 70, 200, 30);
-                 chd1.setDateFormatString("dd/MM/yyyy");
-                 chd1.setFont(new java.awt.Font("Tahoma", 3, 22));
-                 chd2.setBounds(100, 100, 200, 30);
-                 chd2.setDateFormatString("dd/MM/yyyy");
-                 chd2.setFont(new java.awt.Font("Tahoma", 3, 22));
-                 try {
+        final JFrame ID = new JFrame("Changing Date");
+        JLabel hdlbl = new JLabel(": Select a Date :");
+        JLabel lbl1 = new JLabel("Date From:");
+        JLabel lbl2 = new JLabel("       To:");
+        JDateChooser chd1 = new JDateChooser();
+        JDateChooser chd2 = new JDateChooser();
+        final JLabel err = new JLabel("");
+        hdlbl.setBounds(120, 20, 100, 30);
+        lbl1.setBounds(50, 70, 100, 30);
+        lbl2.setBounds(50, 100, 100, 30);
+        chd1.setBounds(100, 70, 200, 30);
+        chd1.setDateFormatString("dd/MM/yyyy");
+        chd1.setFont(new java.awt.Font("Tahoma", 3, 22));
+        chd2.setBounds(100, 100, 200, 30);
+        chd2.setDateFormatString("dd/MM/yyyy");
+        chd2.setFont(new java.awt.Font("Tahoma", 3, 22));
+        try {
             //Calender
             chd1.setMinSelectableDate(new SimpleDateFormat("dd/MM/yyyy").parse(Syear));
             chd1.setMaxSelectableDate(new SimpleDateFormat("dd/MM/yyyy").parse(Eyear));
@@ -394,270 +398,264 @@ public void setter(){
             chd2.setMaxSelectableDate(new SimpleDateFormat("dd/MM/yyyy").parse(Eyear));
         } catch (ParseException ex) {
             JLabel label = new JLabel("There is issue while setup calender bounds");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        JOptionPane.showMessageDialog(this,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-        System.exit(1);
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(this, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+            System.exit(1);
         }
         JTextFieldDateEditor editor = (JTextFieldDateEditor) chd1.getDateEditor();
         editor.setEditable(false);
         editor = (JTextFieldDateEditor) chd2.getDateEditor();
         editor.setEditable(false);
-    try {
-        chd1.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dt1));
-        chd2.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dt1));
-    } catch (ParseException ex) {
-        chd1.setDate(new Date());
-        chd2.setDate(new Date());
-    }
-                JButton cancel = new JButton("Cancel");
-                JButton confirm = new JButton("Confirm");
-                cancel.setBounds(50,150,100,30);
-                confirm.setBounds(220,150,100,30);
-                ID.add(hdlbl);
-                ID.add(lbl1);
-                ID.add(lbl2);
-                ID.add(cancel);
-                ID.add(confirm);
-                ID.add(err);
-                ID.setLocationRelativeTo(this);
-                ID.add(chd1);
-                ID.add(chd2);
-                ID.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-                ID.setSize(400,300);
-                ID.setLayout(null);
-                ID.setAlwaysOnTop(true);
-                ID.addWindowListener(new WindowAdapter() {
-    public void windowClosing(WindowEvent event) {
-        setter();
-ID.dispose();
-    }
-});
-                //ID.setModalityExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
-                ID.setVisible(true);
-                ID.setLocationRelativeTo(null);
+        try {
+            chd1.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dt1));
+            chd2.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(dt1));
+        } catch (ParseException ex) {
+            chd1.setDate(new Date());
+            chd2.setDate(new Date());
+        }
+        JButton cancel = new JButton("Cancel");
+        JButton confirm = new JButton("Confirm");
+        cancel.setBounds(50, 150, 100, 30);
+        confirm.setBounds(220, 150, 100, 30);
+        ID.add(hdlbl);
+        ID.add(lbl1);
+        ID.add(lbl2);
+        ID.add(cancel);
+        ID.add(confirm);
+        ID.add(err);
+        ID.setLocationRelativeTo(this);
+        ID.add(chd1);
+        ID.add(chd2);
+        ID.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        ID.setSize(400, 300);
+        ID.setLayout(null);
+        ID.setAlwaysOnTop(true);
+        ID.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent event) {
+                setter();
+                ID.dispose();
+            }
+        });
+        //ID.setModalityExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        ID.setVisible(true);
+        ID.setLocationRelativeTo(null);
 //##########################################################################
-                // Working of Cancel Button STRAT
-                cancel.addActionListener(new ActionListener() {
+        // Working of Cancel Button STRAT
+        cancel.addActionListener(new ActionListener() {
 //this.setEnabled(false);
-                public void actionPerformed(ActionEvent e) {
-                    setter();
-                     ID.dispose();
-                
-                }
-                });
+            public void actionPerformed(ActionEvent e) {
+                setter();
+                ID.dispose();
+
+            }
+        });
                 // Working of Cancel Button OVER
 
 //#######################################################################33
-                // Working of Confirm Button STRAT
-                confirm.addActionListener(new ActionListener() {
+        // Working of Confirm Button STRAT
+        confirm.addActionListener(new ActionListener() {
 
-                public void actionPerformed(ActionEvent e) {
-                   System.out.println("Action should be taken");
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-dt1 = dateFormat.format(chd1.getDate());
-dt2 = dateFormat.format(chd2.getDate());
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Action should be taken");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                dt1 = dateFormat.format(chd1.getDate());
+                dt2 = dateFormat.format(chd2.getDate());
 
-String sdf = "From : "+dt1+"  To : "+dt2;
-        date.setText(sdf);
-setter();
-stocker();
-ID.dispose();
+                String sdf = "From : " + dt1 + "  To : " + dt2;
+                date.setText(sdf);
+                setter();
+                stocker();
+                ID.dispose();
 
-
-                }
-                });
-
-
+            }
+        });
 
                 // Working of Confirm Button OVER
 //######################################################################################3
-
-         }
+    }
     private void dateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dateMouseClicked
         daty();
     }//GEN-LAST:event_dateMouseClicked
 
     private void srcKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_srcKeyPressed
        // final DefaultTableModel model = (DefaultTableModel)table.getModel();
-        
+
     }//GEN-LAST:event_srcKeyPressed
 
-   public void stocker(){
-               
-       // ndt = NamingDate.mainn(dt1);
-//##################################################################################################################################
-        np=(float)0;ns=(float)0;ncs=(float)0;ncp=(float)0;
-//##################################################################################################################################
-        
-        DefaultTableModel dm = (DefaultTableModel)table.getModel();
-dm.getDataVector().removeAllElements();
-dm.fireTableDataChanged(); // notifies the JTable that the model has changed
-        //##################################################################################################################################
+    public void stocker() {
 
-            int cno =1;
-            DefaultTableModel model = (DefaultTableModel)table.getModel();
-            Scanner read ;
-        try {
-            read = new Scanner(new File(ITMadd+"/item.txt"),"UTF-8");
+        // ndt = NamingDate.mainn(dt1);
+//##################################################################################################################################
+        np = (float) 0;
+        ns = (float) 0;
+        ncs = (float) 0;
+        ncp = (float) 0;
+//##################################################################################################################################
+
+        DefaultTableModel dm = (DefaultTableModel) table.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged(); // notifies the JTable that the model has changed
         
+        int cno = 1;
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        Scanner read;
+        try {
+            read = new Scanner(new File(ITMadd + "/item.txt"), "UTF-8");
+
             read.useDelimiter("\\n");
-            while (read.hasNext())                    // It's for Items ... equals to the number of item
+            while (read.hasNext()) // It's for Items ... equals to the number of item
             {
                 ndt = dt1;
-                
+
                 int crow = model.getRowCount();
                 //String cdatename = NamingDateName.mainn(ndt);
-                float  CStatus = (float) 000.00 , TotalITM = (float) 000.00,TotalITMOnDS = (float) 000.00,TotalITMOnDB = (float) 000.00;
-                String icode,iEname = null,iHname=null,str1 = "00",mode,wayer;
+                float CStatus = (float) 000.00, TotalITM = (float) 000.00, TotalITMOnDS = (float) 000.00, TotalITMOnDB = (float) 000.00;
+                String icode, iEname = null, iHname = null, str1 = "00", mode, wayer;
                 int timee = 0;
 
-                
-      
-      icode = read.nextLine();
-      Scanner inread ;
-      
-                File tmp = new File(ITMadd+"/"+icode+"/profile.txt");
-                boolean fs = tmp.exists();
-                if(fs){
-                inread = new Scanner(new File(ITMadd+"/"+icode+"/profile.txt"),"UTF-8");          // to get the name of item
-                inread.useDelimiter("\\n");
-                inread.nextLine();                // name of item having code ccode
-                iEname = inread.nextLine();
-                iHname = inread.nextLine();
-                inread.close();
-                System.out.println("Icode : "+icode);
-                }
-                if(lang.compareToIgnoreCase("English")!=0)
-                model.addRow(new Object[]{cno++,"","",icode,iHname,"","","",""});
-                else
-                    model.addRow(new Object[]{cno++,"","",icode,iEname,"","","",""});
-                
-                model.addRow(new Object[]{"","","","","","","","",""});
-       int counter=0;
-       String dsd;
-      for(dsd=NamingDate.mainn(dt1);counter<60;dsd=datem15.mainn(dsd),counter++){
-          //TextIO.putln(dsd);
-        tmp = new File(ITMadd+"/"+icode+"/Status/"+NamingDateName.mainn(dsd)+".txt");
-      fs = tmp.exists();
-      if(fs){
-          ndt =dsd;
-          break;
-      }
-      }
-      while(DateInBetween.mainn(NamingDate.mainn(ndt),ndt, dt2)){
-      tmp = new File(ITMadd+"/"+icode+"/Status/"+NamingDateName.mainn(ndt)+".txt");
-      fs = tmp.exists();
-      if(fs){
-          System.out.println("\t"+ITMadd+"/"+icode+"/Status/"+NamingDateName.mainn(ndt)+".txt");
-      inread = new Scanner(new File(ITMadd+"/"+icode+"/Status/"+NamingDateName.mainn(ndt)+".txt"),"UTF-8");          // to get the name of item
-      inread.useDelimiter(",|\\n");
-      if(timee ==0){
-      CStatus = Float.valueOf(inread.nextLine());
-      timee =1;
-      }
-      else {
-          inread.nextLine();
-      }
-      inread.nextLine();
-      
-      while(inread.hasNext()){
-      String datee=inread.next();
-      if(DateInBetween.mainn(ndt, datee, dt2)){
-          
-      String cstr = inread.next();
-      str1 = inread.next();
-      String fgh=inread.next();
-      String amt = inread.next();
-      mode = inread.next();
-      //inread.next();
-      wayer = inread.next();
-      //wayer = wayer.substring(0, wayer.length()-1);
-      //TextIO.putln(wayer.compareTo("Customer"));
-      System.out.println(datee+","+cstr+","+str1+","+fgh+","+amt+","+mode+","+wayer+"      :"+wayer+" = "+wayer.compareTo("Customer"));
-      //System.out.println(wayer+"   :  "+wayer.compareTo("Customer"));
-      Scanner nameread;
-      if(wayer.compareTo("Customer")==0||wayer.compareTo("Customer")==1){
-            Add=CMRadd;
-      //TextIO.putln("CMR");
-      }
-      else{
-            Add = PRTadd;
-            //TextIO.putln("PRT :"+wayer);
-      }
-      //System.out.println(Add+"/"+cstr+"/profile.txt");
-      nameread = new Scanner(new File(Add+"/"+cstr+"/profile.txt"),"UTF-8");
-      nameread.nextLine();
-      String Ename = nameread.nextLine();
-      String Hname = nameread.nextLine();
-      nameread.close();
-      String Cname;
-     if(lang.compareToIgnoreCase("English")!=0)
-           Cname=Hname;
-      else
-          Cname=Ename;
-      //TextIO.putln(Cname);
-      Float vf = Float.valueOf(str1);
-      TotalITM = TotalITM + Float.valueOf(str1);
-      if(DateInBetween.mainn(dt1, datee, dt2)){
-           
-          if(vf>0){
-         TotalITMOnDB=TotalITMOnDB+Float.valueOf(str1);
-         model.addRow(new Object[]{"",datee,wayer,cstr,Cname,mode,"",str1,amt});
-         if(mode.compareToIgnoreCase("pending")==0){
-         np=np+Float.valueOf(amt);
-         }
-         else{
-             if(icode.compareToIgnoreCase(curnc)!=0){        //Changed
-             ncp=ncp+Float.valueOf(amt);
-             }
-         }
-         
-          }
-          else{
-              TotalITMOnDS=TotalITMOnDS+Float.valueOf(str1);
-              model.addRow(new Object[]{"",datee,wayer,cstr,Cname,mode,str1,"",amt});
-              if(mode.compareToIgnoreCase("pending")==0){
-         ns=ns+Float.valueOf(amt);
-         }
-         else{
-                  if(icode.compareToIgnoreCase(curnc)!=0)
-             ncs=ncs+Float.valueOf(amt);
-         }
-              
-          }
-      }
+                icode = read.nextLine();
+                Scanner inread;
 
-      }
-      else
-          inread.nextLine();
-      }
-      inread.close();
-      }
-      ndt = datep15.mainn(ndt);
-      
-            }
-      
-      CStatus = CStatus + TotalITM;
-      model.setValueAt(String.format("%.2f",TotalITMOnDS), crow, 6);
-      model.setValueAt(String.format("%.2f",TotalITMOnDB), crow, 7);
-      model.setValueAt(String.format("%.2f",CStatus), crow, 8);
-      model.addRow(new Object[]{"","","","","","","","",""});
-      model.addRow(new Object[]{"","","","","","","","",""});
-      model.addRow(new Object[]{"","","","","","","","",""});
-      
+                File tmp = new File(ITMadd + "/" + icode + "/profile.txt");
+                boolean fs = tmp.exists();
+                if (fs) {
+                    inread = new Scanner(new File(ITMadd + "/" + icode + "/profile.txt"), "UTF-8");          // to get the name of item
+                    inread.useDelimiter("\\n");
+                    inread.nextLine();                // name of item having code ccode
+                    iEname = inread.nextLine();
+                    iHname = inread.nextLine();
+                    inread.close();
+                    System.out.println("Icode : " + icode);
+                }
+                if (lang.compareToIgnoreCase("English") != 0) {
+                    model.addRow(new Object[]{cno++, "", "", icode, iHname, "", "", "", ""});
+                } else {
+                    model.addRow(new Object[]{cno++, "", "", icode, iEname, "", "", "", ""});
+                }
+
+                model.addRow(new Object[]{"", "", "", "", "", "", "", "", ""});
+                int counter = 0;
+                String dsd;
+                for (dsd = NamingDate.mainn(dt1); counter < 60; dsd = datem15.mainn(dsd), counter++) {
+                    //TextIO.putln(dsd);
+                    tmp = new File(ITMadd + "/" + icode + "/Status/" + NamingDateName.mainn(dsd) + ".txt");
+                    fs = tmp.exists();
+                    if (fs) {
+                        ndt = dsd;
+                        break;
+                    }
+                }
+                while (DateInBetween.mainn(NamingDate.mainn(ndt), ndt, dt2)) {
+                    tmp = new File(ITMadd + "/" + icode + "/Status/" + NamingDateName.mainn(ndt) + ".txt");
+                    fs = tmp.exists();
+                    if (fs) {
+                        System.out.println("\t" + ITMadd + "/" + icode + "/Status/" + NamingDateName.mainn(ndt) + ".txt");
+                        inread = new Scanner(new File(ITMadd + "/" + icode + "/Status/" + NamingDateName.mainn(ndt) + ".txt"), "UTF-8");          // to get the name of item
+                        inread.useDelimiter(",|\\n");
+                        if (timee == 0) {
+                            CStatus = Float.valueOf(inread.nextLine());
+                            timee = 1;
+                        } else {
+                            inread.nextLine();
+                        }
+                        inread.nextLine();
+
+                        while (inread.hasNext()) {
+                            String datee = inread.next();
+                            if (DateInBetween.mainn(ndt, datee, dt2)) {
+
+                                String cstr = inread.next();
+                                str1 = inread.next();
+                                String fgh = inread.next();
+                                String amt = inread.next();
+                                mode = inread.next();
+                                //inread.next();
+                                wayer = inread.next();
+      //wayer = wayer.substring(0, wayer.length()-1);
+                                //TextIO.putln(wayer.compareTo("Customer"));
+                                System.out.println(datee + "," + cstr + "," + str1 + "," + fgh + "," + amt + "," + mode + "," + wayer + "      :" + wayer + " = " + wayer.compareTo("Customer"));
+                                //System.out.println(wayer+"   :  "+wayer.compareTo("Customer"));
+                                Scanner nameread;
+                                if (wayer.compareTo("Customer") == 0 || wayer.compareTo("Customer") == 1) {
+                                    Add = CMRadd;
+                                    //TextIO.putln("CMR");
+                                } else {
+                                    Add = PRTadd;
+                                    //TextIO.putln("PRT :"+wayer);
+                                }
+                                //System.out.println(Add+"/"+cstr+"/profile.txt");
+                                nameread = new Scanner(new File(Add + "/" + cstr + "/profile.txt"), "UTF-8");
+                                nameread.nextLine();
+                                String Ename = nameread.nextLine();
+                                String Hname = nameread.nextLine();
+                                nameread.close();
+                                String Cname;
+                                if (lang.compareToIgnoreCase("English") != 0) {
+                                    Cname = Hname;
+                                } else {
+                                    Cname = Ename;
+                                }
+                                //TextIO.putln(Cname);
+                                Float vf = Float.valueOf(str1);
+                                TotalITM = TotalITM + Float.valueOf(str1);
+                                if (DateInBetween.mainn(dt1, datee, dt2)) {
+
+                                    if (vf > 0) {
+                                        TotalITMOnDB = TotalITMOnDB + Float.valueOf(str1);
+                                        model.addRow(new Object[]{"", datee, wayer, cstr, Cname, mode, "", str1, amt});
+                                        if (mode.compareToIgnoreCase("pending") == 0) {
+                                            np = np + Float.valueOf(amt);
+                                        } else {
+                                            if (icode.compareToIgnoreCase(curnc) != 0) {        //Changed
+                                                ncp = ncp + Float.valueOf(amt);
+                                            }
+                                        }
+
+                                    } else {
+                                        TotalITMOnDS = TotalITMOnDS + Float.valueOf(str1);
+                                        model.addRow(new Object[]{"", datee, wayer, cstr, Cname, mode, str1, "", amt});
+                                        if (mode.compareToIgnoreCase("pending") == 0) {
+                                            ns = ns + Float.valueOf(amt);
+                                        } else {
+                                            if (icode.compareToIgnoreCase(curnc) != 0) {
+                                                ncs = ncs + Float.valueOf(amt);
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                            } else {
+                                inread.nextLine();
+                            }
+                        }
+                        inread.close();
+                    }
+                    ndt = datep15.mainn(ndt);
+
+                }
+
+                CStatus = CStatus + TotalITM;
+                model.setValueAt(String.format("%.2f", TotalITMOnDS), crow, 6);
+                model.setValueAt(String.format("%.2f", TotalITMOnDB), crow, 7);
+                model.setValueAt(String.format("%.2f", CStatus), crow, 8);
+                model.addRow(new Object[]{"", "", "", "", "", "", "", "", ""});
+                model.addRow(new Object[]{"", "", "", "", "", "", "", "", ""});
+                model.addRow(new Object[]{"", "", "", "", "", "", "", "", ""});
+
 //TextIO.putln(ccode +"  ---> "+CStatus);
-        }
-read.close();
-} catch (FileNotFoundException ex) {
+            }
+            read.close();
+        } catch (FileNotFoundException ex) {
             Logger.getLogger(ITMxStatusOnD2DWD.class.getName()).log(Level.SEVERE, null, ex);
-        }    
-        
-       // netp.setText(String.valueOf(np));
+        }
+
+        // netp.setText(String.valueOf(np));
         netp.setText(String.format("%.1f", np));
         nets.setText(String.format("%.1f", ns));
         netcp.setText(String.format("%.1f", ncp));
         netcs.setText(String.format("%.1f", ncs));
-   } 
+    }
 
     /**
      * @param args the command line arguments
@@ -2736,7 +2734,7 @@ read.close();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ITMxStatusOnD2DWD("D:/Shopy/Shopy","src/Icons/logo.png","27/12/2020","31/12/2020","2020-2021","01/01/2020","31/12/2021").setVisible(true);
+                new ITMxStatusOnD2DWD("D:/Shopy/Shopy", "src/Icons/logo.png", "27/12/2020", "31/12/2020", "2020-2021", "01/01/2020", "31/12/2021").setVisible(true);
             }
         });
     }

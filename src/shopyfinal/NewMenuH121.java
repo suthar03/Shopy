@@ -7,9 +7,12 @@ package shopyfinal;
 
 import com.toedter.calendar.JDateChooser;
 import java.awt.AWTException;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Paint;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,10 +28,14 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.PriorityQueue;
 import java.util.Scanner;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -39,9 +46,17 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
  *
@@ -51,8 +66,14 @@ public class NewMenuH121 extends javax.swing.JFrame {
 
     String baseadd, logo, user, lang = "English";
     String IDyear = "2020-2020", Syear = "01/01/2020", Eyear = "01/01/2020";
-    PriorityQueue<Tabuler> Highest_Sold;
     int number_in_top = 15;
+    String dt_str = "01/01/2021";
+    Float[] purchased, sold, bothCombined;
+    DefaultCategoryDataset dataset_purchased = new DefaultCategoryDataset();
+    DefaultCategoryDataset dataset_sold = new DefaultCategoryDataset();
+    DefaultCategoryDataset dataset_bothCombined = new DefaultCategoryDataset();
+
+    SimpleDateFormat Date_Formate = new SimpleDateFormat("dd/MM/yyyy");
 
     public NewMenuH121(String base, String golo) {
         baseadd = base;
@@ -123,8 +144,19 @@ public class NewMenuH121 extends javax.swing.JFrame {
             label.setFont(new Font("Arial", Font.BOLD, 18));
             JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
+        UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+        defaults.putIfAbsent("Table.alternateRowColor", new Color(228, 242, 242));
+        Date dt_temp = new Date();
+        dt_str = Date_Formate.format(dt_temp.getTime());
+        System.out.println(Syear + " : " + dt_str + " : " + Eyear);
+        if (DateInBetween.mainn(Syear, dt_str, Eyear) == false) {
+            dt_str = Eyear;
+        }
+        System.out.println(Syear + " : " + dt_str + " : " + Eyear);
         langview();
-        //setDefaultCloseOperation(clos());
+        setupSelection();
+        CMRorPRT_HighestPurchased.setSelectedIndex(1);
+        BackendProcees();
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent event) {
                 try {
@@ -176,6 +208,25 @@ public class NewMenuH121 extends javax.swing.JFrame {
                 }
             }
         });
+
+    }
+
+    public void setupSelection() {
+        int year_min = Integer.valueOf(Syear.substring(6, 10));
+        int year = Integer.valueOf(dt_str.substring(6, 10));
+        int month = Integer.valueOf(dt_str.substring(3, 5));
+        System.out.println(dt_str + " " + month);
+        month_Market.setSelectedIndex(month - 1);
+        month_HighestSold.setSelectedIndex(month - 1);
+        month_HighestPurchased.setSelectedIndex(month - 1);
+        year_Market.removeAllItems();
+        year_HighestSold.removeAllItems();
+        year_HighestPurchased.removeAllItems();
+        for (int j = year; j >= year_min; --j) {
+            year_Market.addItem(String.format("%04d", j));
+            year_HighestSold.addItem(String.format("%04d", j));
+            year_HighestPurchased.addItem(String.format("%04d", j));
+        }
 
     }
 
@@ -442,7 +493,8 @@ public class NewMenuH121 extends javax.swing.JFrame {
         edt27.setIcon(imageIcon);
     }
 
-    public void dataloader() {
+    public void dataloaderHighestSold() {
+        PriorityQueue<Tabuler> Highest_Sold;
         Highest_Sold = new PriorityQueue<Tabuler>(new TabulerComparator());
         String of_ = "customer";
         if (CMRorPRT_HighestSold.getSelectedIndex() == 1) {
@@ -510,6 +562,227 @@ public class NewMenuH121 extends javax.swing.JFrame {
 
     }
 
+    public void dataloaderHighestPurchased() {
+        PriorityQueue<Tabuler> Highest_Purchased;
+        Highest_Purchased = new PriorityQueue<>(new TabulerComparator());
+        String of_ = "customer";
+        if (CMRorPRT_HighestPurchased.getSelectedIndex() == 1) {
+            of_ = "party";
+        }
+        System.out.println("File Add: " + baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + of_ + ".txt");
+        try {
+            String mnth = String.format("%02d", month_HighestPurchased.getSelectedIndex() + 1);
+            String name_date = year_HighestPurchased.getSelectedItem().toString() + mnth + "01";
+            Scanner read = new Scanner(new File(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + of_ + ".txt"), "UTF-8");
+            read.useDelimiter("\\n");
+
+            while (read.hasNext()) // It's for user ... equals to the number of user
+            {
+                String costomer_code = read.nextLine();
+                System.out.println(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + costomer_code + "/Pending/Taken/" + name_date + ".txt");
+                File file = new File(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + costomer_code + "/Pending/Taken/" + name_date + ".txt");
+                if (file.exists()) {
+                    try {
+                        String str = GetLine.mainn(baseadd + "/" + user + "/" + IDyear + "/" + of_ + "/" + costomer_code + "/Pending/Taken/" + name_date + ".txt", 1);
+                        float res = Float.valueOf(str);
+                        System.out.println(costomer_code + " = " + str);
+                        Tabuler candidate_cutomer = new Tabuler(costomer_code, res);
+                        Highest_Purchased.add(candidate_cutomer);
+                        System.out.println("\t top ele: " + String.valueOf(Highest_Purchased.peek()) + " size(): " + Highest_Purchased.size());
+                        if (Highest_Purchased.size() > number_in_top) {
+                            Highest_Purchased.poll();
+                        }
+                        System.out.println("\t top ele: " + String.valueOf(Highest_Purchased.peek()) + " size(): " + Highest_Purchased.size());
+
+                    } catch (IOException ex) {
+                        System.out.println(ex.getMessage());
+                        Logger.getLogger(NewMenuH121.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            JLabel label = new JLabel("not getting access to Customer member  !!! Error0007");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+
+        System.out.println("Showing loaded data in prioirty queue");
+        DefaultTableModel model = (DefaultTableModel) table_HighestPurchased.getModel();
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+
+        while (!Highest_Purchased.isEmpty()) {
+            Tabuler cand = Highest_Purchased.peek();
+            Highest_Purchased.poll();
+            String customer_name = getCustomerName(of_, cand.customer_code);
+            cand.setCustomer_name(customer_name);
+            System.out.println(cand.toString());
+            model.addRow(new Object[]{cand.customer_code, cand.customer_name, cand.customer_sell});
+
+        }
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table_HighestPurchased.getModel());
+        table_HighestPurchased.setRowSorter(sorter);
+        ArrayList<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        int columnIndexToSort = 2;
+        sortKeys.add(new RowSorter.SortKey(columnIndexToSort, SortOrder.DESCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+
+    }
+
+    public void dataloaderMarketTrending() {
+        purchased = new Float[32];
+        sold = new Float[32];
+        Arrays.fill(purchased, (float) 0);
+        Arrays.fill(sold, (float) 0);
+        String mnth = String.format("%02d", month_Market.getSelectedIndex() + 1);
+        String name_date = year_Market.getSelectedItem().toString() + mnth + "01";
+
+        try {
+            Scanner read = new Scanner(new File(baseadd + "/" + user + "/" + IDyear + "/item/item.txt"), "UTF-8");
+            read.useDelimiter("\\n");
+
+            while (read.hasNext()) // It's for user ... equals to the number of user
+            {
+                String item_code = read.nextLine();
+                System.out.println(baseadd + "/" + user + "/" + IDyear + "/item/" + item_code + "/Status/" + name_date + ".txt");
+                File file = new File(baseadd + "/" + user + "/" + IDyear + "/item/" + item_code + "/Status/" + name_date + ".txt");
+                if (file.exists()) {
+                    System.out.println(item_code);
+                    DataForItemCode(file);
+
+                }
+
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            JLabel label = new JLabel("not getting access to Customer member  !!! Error0007");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
+        dataset_purchased.clear();
+        dataset_sold.clear();
+        int year = Integer.valueOf(year_Market.getSelectedItem().toString());
+        int month = month_Market.getSelectedIndex();
+        int days = DayInMonth(month, year);
+        System.out.println("month:" + month + " = " + days);
+        for (int i = 1; i <= days; ++i) {
+            System.out.println(purchased[i] + " , " + sold[i]);
+            dataset_purchased.addValue(purchased[i], "purchased", i + "");
+            dataset_sold.addValue(sold[i], "sold", i + "");
+            dataset_bothCombined.addValue(sold[i], "sold", i + "");
+            dataset_bothCombined.addValue(purchased[i], "purchased", i + "");
+        }
+    }
+
+    public void DataForItemCode(File fileAdd) {
+
+        try {
+            Scanner inread = new Scanner(fileAdd, "UTF-8");          // to get the name of item
+            inread.useDelimiter(",|\\n");
+            inread.nextLine();//status of item at very begining of this month
+            inread.nextLine();// variation in stock in this month
+            System.out.println("Moving for values");
+            while (inread.hasNext()) {
+                //01/01/2020,0323,-1.0,10.0,10.0,Pending,Customer
+                String Transaction_date = inread.next();
+                System.out.print(Transaction_date);
+                inread.next();//customercode
+                String str_qty = inread.next();//qty
+                System.out.print(str_qty);
+                inread.next();//rate
+                String str_amt = inread.next();//amount
+                System.out.print(" str_amt:" + str_amt);
+                inread.nextLine();//mode customer/party
+                int index = Integer.parseInt(Transaction_date.substring(0, 2));
+                System.out.println("  Done " + index + " :" + str_qty.charAt(0) + " :: " + (str_qty.charAt(0) != '-'));
+                float amount = Float.valueOf(str_amt);
+                if (str_qty.charAt(0) == '-') {
+                    sold[index] += amount;
+                } else {
+                    purchased[index] += amount;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+    }
+
+    public void BackendProcees() {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                refresh_HighestSold.doClick();
+                refresh_HighestPurchased.doClick();
+            }
+        };
+        thread.start();
+        Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                refresh_Market.doClick();
+            }
+        };
+        thread2.start();
+    }
+
+    public int DayInMonth(int mn, int yr) {
+        int res = 0;
+        switch (mn) {
+            case 0:
+                res = 31;
+                break;
+            case 1:
+                res = isleap(yr);
+                break;
+            case 2:
+                res = 31;
+                break;
+            case 3:
+                res = 30;
+                break;
+            case 4:
+                res = 31;
+                break;
+            case 5:
+                res = 30;
+                break;
+            case 6:
+                res = 31;
+                break;
+            case 7:
+                res = 31;
+                break;
+            case 8:
+                res = 30;
+                break;
+            case 9:
+                res = 31;
+                break;
+            case 10:
+                res = 30;
+                break;
+            case 11:
+                res = 31;
+                break;
+
+        }
+        return res;
+    }
+
+    public int isleap(int yr) {
+        if (((yr % 4 == 0) && (yr % 100 != 0)) || (yr % 400 == 0)) {
+            return 29;
+        } else {
+            return 28;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -526,7 +799,23 @@ public class NewMenuH121 extends javax.swing.JFrame {
         edt7 = new javax.swing.JLabel();
         pnl_graphs = new javax.swing.JPanel();
         pnl_Graph1 = new javax.swing.JPanel();
+        MarketTrend = new javax.swing.JPanel();
+        lbl_Market = new javax.swing.JLabel();
+        pnl_functionMarket = new javax.swing.JPanel();
+        SellorPurchased_Market = new javax.swing.JComboBox();
+        interval_Market = new javax.swing.JComboBox();
+        year_Market = new javax.swing.JComboBox();
+        month_Market = new javax.swing.JComboBox();
+        refresh_Market = new javax.swing.JButton();
+        pnl_Market = new javax.swing.JPanel();
         pnl_Graph2 = new javax.swing.JPanel();
+        BookOrders = new javax.swing.JPanel();
+        lbl_Market1 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        pnl_BookNewOrder = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        pnl_ViewOrders = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         pnl_Graph3 = new javax.swing.JPanel();
         BestBuyer = new javax.swing.JPanel();
         lbl_HighestSold = new javax.swing.JLabel();
@@ -536,9 +825,19 @@ public class NewMenuH121 extends javax.swing.JFrame {
         year_HighestSold = new javax.swing.JComboBox();
         month_HighestSold = new javax.swing.JComboBox();
         refresh_HighestSold = new javax.swing.JButton();
-        BB_graph = new javax.swing.JScrollPane();
+        BB_table = new javax.swing.JScrollPane();
         table_HighestSold = new javax.swing.JTable();
         pnl_Graph4 = new javax.swing.JPanel();
+        BestPurchased = new javax.swing.JPanel();
+        lbl_HighestPurchased = new javax.swing.JLabel();
+        pnl_function1 = new javax.swing.JPanel();
+        CMRorPRT_HighestPurchased = new javax.swing.JComboBox();
+        interval_HighestPurchased = new javax.swing.JComboBox();
+        year_HighestPurchased = new javax.swing.JComboBox();
+        month_HighestPurchased = new javax.swing.JComboBox();
+        refresh_HighestPurchased = new javax.swing.JButton();
+        BP_table = new javax.swing.JScrollPane();
+        table_HighestPurchased = new javax.swing.JTable();
         pnl_right_shortcuts = new javax.swing.JPanel();
         edt21 = new javax.swing.JLabel();
         edt22 = new javax.swing.JLabel();
@@ -723,36 +1022,148 @@ public class NewMenuH121 extends javax.swing.JFrame {
 
         pnl_Graph1.setBackground(new java.awt.Color(51, 255, 204));
 
+        MarketTrend.setBackground(new java.awt.Color(255, 204, 51));
+        MarketTrend.setLayout(new javax.swing.BoxLayout(MarketTrend, javax.swing.BoxLayout.Y_AXIS));
+
+        lbl_Market.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
+        lbl_Market.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_Market.setText("Selling and purchased");
+        lbl_Market.setAlignmentX(0.5F);
+        lbl_Market.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        MarketTrend.add(lbl_Market);
+
+        pnl_functionMarket.setMaximumSize(new java.awt.Dimension(131147, 30));
+        pnl_functionMarket.setMinimumSize(new java.awt.Dimension(381, 25));
+        pnl_functionMarket.setPreferredSize(new java.awt.Dimension(100, 25));
+        pnl_functionMarket.setLayout(new javax.swing.BoxLayout(pnl_functionMarket, javax.swing.BoxLayout.X_AXIS));
+
+        SellorPurchased_Market.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Sell", "Purchased", "Both" }));
+        SellorPurchased_Market.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                SellorPurchased_MarketItemStateChanged(evt);
+            }
+        });
+        pnl_functionMarket.add(SellorPurchased_Market);
+
+        interval_Market.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Monthly", "Yearly" }));
+        interval_Market.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                interval_MarketItemStateChanged(evt);
+            }
+        });
+        pnl_functionMarket.add(interval_Market);
+
+        year_Market.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2020", "2021" }));
+        year_Market.setToolTipText("2021");
+        pnl_functionMarket.add(year_Market);
+
+        month_Market.setMaximumRowCount(12);
+        month_Market.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
+        pnl_functionMarket.add(month_Market);
+
+        refresh_Market.setText("Refresh");
+        refresh_Market.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refresh_MarketActionPerformed(evt);
+            }
+        });
+        pnl_functionMarket.add(refresh_Market);
+
+        MarketTrend.add(pnl_functionMarket);
+
+        pnl_Market.setLayout(new java.awt.BorderLayout());
+        MarketTrend.add(pnl_Market);
+
         javax.swing.GroupLayout pnl_Graph1Layout = new javax.swing.GroupLayout(pnl_Graph1);
         pnl_Graph1.setLayout(pnl_Graph1Layout);
         pnl_Graph1Layout.setHorizontalGroup(
             pnl_Graph1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 670, Short.MAX_VALUE)
+            .addComponent(MarketTrend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnl_Graph1Layout.setVerticalGroup(
             pnl_Graph1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 351, Short.MAX_VALUE)
+            .addComponent(MarketTrend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pnl_graphs.add(pnl_Graph1);
 
         pnl_Graph2.setBackground(new java.awt.Color(51, 51, 255));
 
+        BookOrders.setBackground(new java.awt.Color(255, 204, 51));
+        BookOrders.setLayout(new javax.swing.BoxLayout(BookOrders, javax.swing.BoxLayout.Y_AXIS));
+
+        lbl_Market1.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
+        lbl_Market1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_Market1.setText("Order Booking");
+        lbl_Market1.setAlignmentX(0.5F);
+        lbl_Market1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BookOrders.add(lbl_Market1);
+
+        jTabbedPane1.setBackground(new java.awt.Color(255, 204, 51));
+        jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jTabbedPane1.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
+
+        jLabel1.setText("Book New Order");
+
+        javax.swing.GroupLayout pnl_BookNewOrderLayout = new javax.swing.GroupLayout(pnl_BookNewOrder);
+        pnl_BookNewOrder.setLayout(pnl_BookNewOrderLayout);
+        pnl_BookNewOrderLayout.setHorizontalGroup(
+            pnl_BookNewOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_BookNewOrderLayout.createSequentialGroup()
+                .addGap(139, 139, 139)
+                .addComponent(jLabel1)
+                .addContainerGap(472, Short.MAX_VALUE))
+        );
+        pnl_BookNewOrderLayout.setVerticalGroup(
+            pnl_BookNewOrderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_BookNewOrderLayout.createSequentialGroup()
+                .addGap(103, 103, 103)
+                .addComponent(jLabel1)
+                .addContainerGap(176, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Book New Orders", pnl_BookNewOrder);
+        pnl_BookNewOrder.getAccessibleContext().setAccessibleName("NewOrderTab");
+
+        jLabel2.setText("View Pending Orders");
+
+        javax.swing.GroupLayout pnl_ViewOrdersLayout = new javax.swing.GroupLayout(pnl_ViewOrders);
+        pnl_ViewOrders.setLayout(pnl_ViewOrdersLayout);
+        pnl_ViewOrdersLayout.setHorizontalGroup(
+            pnl_ViewOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_ViewOrdersLayout.createSequentialGroup()
+                .addGap(166, 166, 166)
+                .addComponent(jLabel2)
+                .addContainerGap(418, Short.MAX_VALUE))
+        );
+        pnl_ViewOrdersLayout.setVerticalGroup(
+            pnl_ViewOrdersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_ViewOrdersLayout.createSequentialGroup()
+                .addGap(112, 112, 112)
+                .addComponent(jLabel2)
+                .addContainerGap(167, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("View Pending Orders", pnl_ViewOrders);
+        pnl_ViewOrders.getAccessibleContext().setAccessibleName("ViewOrderTab");
+
+        BookOrders.add(jTabbedPane1);
+        jTabbedPane1.getAccessibleContext().setAccessibleName("NewOrderTab");
+
         javax.swing.GroupLayout pnl_Graph2Layout = new javax.swing.GroupLayout(pnl_Graph2);
         pnl_Graph2.setLayout(pnl_Graph2Layout);
         pnl_Graph2Layout.setHorizontalGroup(
             pnl_Graph2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(BookOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnl_Graph2Layout.setVerticalGroup(
             pnl_Graph2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 351, Short.MAX_VALUE)
+            .addComponent(BookOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pnl_graphs.add(pnl_Graph2);
 
         pnl_Graph3.setBackground(new java.awt.Color(102, 153, 0));
-        pnl_Graph3.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         BestBuyer.setBackground(new java.awt.Color(255, 204, 51));
         BestBuyer.setLayout(new javax.swing.BoxLayout(BestBuyer, javax.swing.BoxLayout.Y_AXIS));
@@ -796,7 +1207,7 @@ public class NewMenuH121 extends javax.swing.JFrame {
 
         BestBuyer.add(pnl_function);
 
-        BB_graph.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+        BB_table.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
 
         table_HighestSold.setAutoCreateRowSorter(true);
         table_HighestSold.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
@@ -824,9 +1235,17 @@ public class NewMenuH121 extends javax.swing.JFrame {
             }
         });
         table_HighestSold.setRowHeight(30);
-        BB_graph.setViewportView(table_HighestSold);
+        BB_table.setViewportView(table_HighestSold);
+        if (table_HighestSold.getColumnModel().getColumnCount() > 0) {
+            table_HighestSold.getColumnModel().getColumn(0).setMinWidth(100);
+            table_HighestSold.getColumnModel().getColumn(0).setMaxWidth(200);
+            table_HighestSold.getColumnModel().getColumn(1).setMinWidth(300);
+            table_HighestSold.getColumnModel().getColumn(1).setMaxWidth(400);
+            table_HighestSold.getColumnModel().getColumn(2).setMinWidth(200);
+            table_HighestSold.getColumnModel().getColumn(2).setMaxWidth(300);
+        }
 
-        BestBuyer.add(BB_graph);
+        BestBuyer.add(BB_table);
 
         javax.swing.GroupLayout pnl_Graph3Layout = new javax.swing.GroupLayout(pnl_Graph3);
         pnl_Graph3.setLayout(pnl_Graph3Layout);
@@ -836,23 +1255,104 @@ public class NewMenuH121 extends javax.swing.JFrame {
         );
         pnl_Graph3Layout.setVerticalGroup(
             pnl_Graph3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(BestBuyer, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+            .addComponent(BestBuyer, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
         );
 
         pnl_graphs.add(pnl_Graph3);
 
         pnl_Graph4.setBackground(new java.awt.Color(255, 204, 204));
-        pnl_Graph4.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        BestPurchased.setBackground(new java.awt.Color(255, 204, 51));
+        BestPurchased.setLayout(new javax.swing.BoxLayout(BestPurchased, javax.swing.BoxLayout.Y_AXIS));
+
+        lbl_HighestPurchased.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
+        lbl_HighestPurchased.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbl_HighestPurchased.setText("Most bought from these suppliers");
+        lbl_HighestPurchased.setAlignmentX(0.5F);
+        lbl_HighestPurchased.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        BestPurchased.add(lbl_HighestPurchased);
+
+        pnl_function1.setPreferredSize(new java.awt.Dimension(100, 25));
+        pnl_function1.setLayout(new javax.swing.BoxLayout(pnl_function1, javax.swing.BoxLayout.X_AXIS));
+
+        CMRorPRT_HighestPurchased.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Customer", "Party" }));
+        pnl_function1.add(CMRorPRT_HighestPurchased);
+
+        interval_HighestPurchased.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Monthly", "Yearly" }));
+        interval_HighestPurchased.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                interval_HighestPurchasedItemStateChanged(evt);
+            }
+        });
+        pnl_function1.add(interval_HighestPurchased);
+
+        year_HighestPurchased.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2020", "2021" }));
+        year_HighestPurchased.setToolTipText("2021");
+        pnl_function1.add(year_HighestPurchased);
+
+        month_HighestPurchased.setMaximumRowCount(12);
+        month_HighestPurchased.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
+        pnl_function1.add(month_HighestPurchased);
+
+        refresh_HighestPurchased.setText("Refresh");
+        refresh_HighestPurchased.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refresh_HighestPurchasedActionPerformed(evt);
+            }
+        });
+        pnl_function1.add(refresh_HighestPurchased);
+
+        BestPurchased.add(pnl_function1);
+
+        BP_table.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
+
+        table_HighestPurchased.setAutoCreateRowSorter(true);
+        table_HighestPurchased.setFont(new java.awt.Font("Monospaced", 0, 18)); // NOI18N
+        table_HighestPurchased.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Code", "Name", "Amount"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_HighestPurchased.setRowHeight(30);
+        BP_table.setViewportView(table_HighestPurchased);
+        if (table_HighestPurchased.getColumnModel().getColumnCount() > 0) {
+            table_HighestPurchased.getColumnModel().getColumn(0).setMinWidth(100);
+            table_HighestPurchased.getColumnModel().getColumn(0).setMaxWidth(200);
+            table_HighestPurchased.getColumnModel().getColumn(1).setMinWidth(300);
+            table_HighestPurchased.getColumnModel().getColumn(1).setMaxWidth(400);
+            table_HighestPurchased.getColumnModel().getColumn(2).setMinWidth(200);
+            table_HighestPurchased.getColumnModel().getColumn(2).setMaxWidth(300);
+        }
+
+        BestPurchased.add(BP_table);
 
         javax.swing.GroupLayout pnl_Graph4Layout = new javax.swing.GroupLayout(pnl_Graph4);
         pnl_Graph4.setLayout(pnl_Graph4Layout);
         pnl_Graph4Layout.setHorizontalGroup(
             pnl_Graph4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
+            .addComponent(BestPurchased, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnl_Graph4Layout.setVerticalGroup(
             pnl_Graph4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 341, Short.MAX_VALUE)
+            .addComponent(BestPurchased, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
         );
 
         pnl_graphs.add(pnl_Graph4);
@@ -1771,13 +2271,107 @@ public class NewMenuH121 extends javax.swing.JFrame {
     }//GEN-LAST:event_interval_HighestSoldItemStateChanged
 
     private void refresh_HighestSoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_HighestSoldActionPerformed
-        dataloader();
+        dataloaderHighestSold();
         if (CMRorPRT_HighestSold.getSelectedIndex() == 0) {
             lbl_HighestSold.setText("These consumers bought the most");
         } else {
             lbl_HighestSold.setText("These suppliers were paid the most");
         }
     }//GEN-LAST:event_refresh_HighestSoldActionPerformed
+
+    private void interval_HighestPurchasedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_interval_HighestPurchasedItemStateChanged
+        if (interval_HighestPurchased.getSelectedIndex() == 0) {
+            //show data day wise unblock month
+            month_HighestPurchased.setEnabled(true);
+        } else {
+            //show data monthly and block month selection
+            month_HighestPurchased.setEnabled(false);
+        }
+    }//GEN-LAST:event_interval_HighestPurchasedItemStateChanged
+
+    private void refresh_HighestPurchasedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_HighestPurchasedActionPerformed
+        dataloaderHighestPurchased();
+        if (CMRorPRT_HighestPurchased.getSelectedIndex() == 0) {
+            lbl_HighestPurchased.setText("These consumers paid the most");
+        } else {
+            lbl_HighestPurchased.setText("Most bought from these suppliers");
+        }
+    }//GEN-LAST:event_refresh_HighestPurchasedActionPerformed
+
+    private void interval_MarketItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_interval_MarketItemStateChanged
+        if (interval_Market.getSelectedIndex() == 0) {
+            //show data day wise unblock month
+            month_Market.setEnabled(true);
+        } else {
+            //show data monthly and block month selection
+            month_Market.setEnabled(false);
+        }
+    }//GEN-LAST:event_interval_MarketItemStateChanged
+
+    private void refresh_MarketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_MarketActionPerformed
+        dataloaderMarketTrending();
+        String title = "Someone", X_lbl = "Day of month", Y_lbl = "Amount";
+        ChartPanel barpanel;
+        JFreeChart barChart;
+        if (SellorPurchased_Market.getSelectedIndex() == 0) {//Sell
+            title = "Sell Analysis";
+            barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_sold, PlotOrientation.VERTICAL, false, true, false);
+            CategoryPlot barchrt = barChart.getCategoryPlot();
+            barchrt.setBackgroundPaint(null);
+            barchrt.setRangeGridlinePaint(Color.BLUE);
+            barpanel = new ChartPanel(barChart);
+        } else if (SellorPurchased_Market.getSelectedIndex() == 1) {//purchased
+            title = "Purchase Analysis";
+            barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_purchased, PlotOrientation.VERTICAL, false, true, false);
+            CategoryPlot barchrt = barChart.getCategoryPlot();
+            barchrt.setBackgroundPaint(null);
+            barchrt.setRangeGridlinePaint(Color.BLUE);
+            barpanel = new ChartPanel(barChart);
+        } else {//both combined
+            title = "Sell and Purchase Analysis";
+            barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_bothCombined, PlotOrientation.VERTICAL, true, true, false);
+            CategoryPlot barchrt = barChart.getCategoryPlot();
+            barchrt.setBackgroundPaint(null);
+            barchrt.setRangeGridlinePaint(Color.BLUE);
+            barpanel = new ChartPanel(barChart);
+        }
+        pnl_Market.removeAll();
+        pnl_Market.add(barpanel, BorderLayout.CENTER);
+        pnl_Market.validate();
+        pnl_Market.repaint();
+    }//GEN-LAST:event_refresh_MarketActionPerformed
+
+    private void SellorPurchased_MarketItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_SellorPurchased_MarketItemStateChanged
+        String title = "Someone", X_lbl = "Day of month", Y_lbl = "Amount";
+        ChartPanel barpanel;
+        JFreeChart barChart;
+        if (SellorPurchased_Market.getSelectedIndex() == 0) {//Sell
+            title = "Sell Analysis";
+            barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_sold, PlotOrientation.VERTICAL, false, true, false);
+            CategoryPlot barchrt = barChart.getCategoryPlot();
+            barchrt.setBackgroundPaint(null);
+            barchrt.setRangeGridlinePaint(Color.BLUE);
+            barpanel = new ChartPanel(barChart);
+        } else if (SellorPurchased_Market.getSelectedIndex() == 1) {//purchased
+            title = "Purchase Analysis";
+            barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_purchased, PlotOrientation.VERTICAL, false, true, false);
+            CategoryPlot barchrt = barChart.getCategoryPlot();
+            barchrt.setBackgroundPaint(null);
+            barchrt.setRangeGridlinePaint(Color.BLUE);
+            barpanel = new ChartPanel(barChart);
+        } else {//both combined
+            title = "Sell and Purchase Analysis";
+            barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_bothCombined, PlotOrientation.VERTICAL, true, true, false);
+            CategoryPlot barchrt = barChart.getCategoryPlot();
+            barchrt.setBackgroundPaint(null);
+            barchrt.setRangeGridlinePaint(Color.BLUE);
+            barpanel = new ChartPanel(barChart);
+        }
+        pnl_Market.removeAll();
+        pnl_Market.add(barpanel, BorderLayout.CENTER);
+        pnl_Market.validate();
+        pnl_Market.repaint();
+    }//GEN-LAST:event_SellorPurchased_MarketItemStateChanged
 
     private String getCustomerName(String of_, String customer_code) {
         String res = "Unknown";
@@ -132930,8 +133524,12 @@ public class NewMenuH121 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane BB_graph;
+    private javax.swing.JScrollPane BB_table;
+    private javax.swing.JScrollPane BP_table;
     private javax.swing.JPanel BestBuyer;
+    private javax.swing.JPanel BestPurchased;
+    private javax.swing.JPanel BookOrders;
+    private javax.swing.JComboBox CMRorPRT_HighestPurchased;
     private javax.swing.JComboBox CMRorPRT_HighestSold;
     private javax.swing.JMenuItem ChangeYear;
     private javax.swing.JMenuItem CreateYear;
@@ -132978,7 +133576,9 @@ public class NewMenuH121 extends javax.swing.JFrame {
     private javax.swing.JMenuItem MSod;
     private javax.swing.JMenuItem MSod2d;
     private javax.swing.JMenuItem MSod2dwd;
+    private javax.swing.JPanel MarketTrend;
     private javax.swing.JMenuBar Menu;
+    private javax.swing.JComboBox SellorPurchased_Market;
     private javax.swing.JLabel edt1;
     private javax.swing.JLabel edt2;
     private javax.swing.JLabel edt21;
@@ -132993,31 +133593,51 @@ public class NewMenuH121 extends javax.swing.JFrame {
     private javax.swing.JLabel edt5;
     private javax.swing.JLabel edt6;
     private javax.swing.JLabel edt7;
+    private javax.swing.JComboBox interval_HighestPurchased;
     private javax.swing.JComboBox interval_HighestSold;
+    private javax.swing.JComboBox interval_Market;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lbl_HighestPurchased;
     private javax.swing.JLabel lbl_HighestSold;
+    private javax.swing.JLabel lbl_Market;
+    private javax.swing.JLabel lbl_Market1;
+    private javax.swing.JComboBox month_HighestPurchased;
     private javax.swing.JComboBox month_HighestSold;
+    private javax.swing.JComboBox month_Market;
+    private javax.swing.JPanel pnl_BookNewOrder;
     private javax.swing.JPanel pnl_Graph1;
     private javax.swing.JPanel pnl_Graph2;
     private javax.swing.JPanel pnl_Graph3;
     private javax.swing.JPanel pnl_Graph4;
+    private javax.swing.JPanel pnl_Market;
+    private javax.swing.JPanel pnl_ViewOrders;
     private javax.swing.JPanel pnl_function;
+    private javax.swing.JPanel pnl_function1;
+    private javax.swing.JPanel pnl_functionMarket;
     private javax.swing.JPanel pnl_graphs;
     private javax.swing.JPanel pnl_left_shortcuts;
     private javax.swing.JPanel pnl_main;
     private javax.swing.JPanel pnl_right_shortcuts;
+    private javax.swing.JButton refresh_HighestPurchased;
     private javax.swing.JButton refresh_HighestSold;
+    private javax.swing.JButton refresh_Market;
+    private javax.swing.JTable table_HighestPurchased;
     private javax.swing.JTable table_HighestSold;
     private javax.swing.JMenuItem uadd;
     private javax.swing.JMenuItem ucp;
     private javax.swing.JMenuItem ued;
     private javax.swing.JMenuItem uremove;
     private javax.swing.JLabel usd;
+    private javax.swing.JComboBox year_HighestPurchased;
     private javax.swing.JComboBox year_HighestSold;
+    private javax.swing.JComboBox year_Market;
     // End of variables declaration//GEN-END:variables
 
 }
