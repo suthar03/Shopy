@@ -19,160 +19,173 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-
 public class Recent extends javax.swing.JFrame {
 
-    String baseadd="D:/Shopy/Shopy",logo="src/Icons/logo.png",user="1501",ITMadd=baseadd+"/"+user+"/item",lang="English";
-    String IDyear="2020-2020",Syear="01/01/2020",Eyear="01/01/2020";
-    public Recent(String bs,String golo,String usr,String lng,String idy, String sy,String ey) {
-        baseadd=bs;
+    String baseadd = "D:/Shopy/Shopy", logo = "src/Icons/logo.png", user = "1501", ITMadd = baseadd + "/" + user + "/item", lang = "English";
+    String IDyear = "2020-2020", Syear = "01/01/2020", Eyear = "01/01/2020";
+
+    public Recent(String bs, String golo, String usr, String lng, String idy, String sy, String ey) {
+        baseadd = bs;
         logo = golo;
         user = usr;
         lang = lng;
         IDyear = idy;
         Syear = sy;
         Eyear = ey;
-        ITMadd=baseadd+"/"+user+"/"+IDyear+"/item";
+        ITMadd = baseadd + "/" + user + "/" + IDyear + "/item";
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         src.requestFocus();
         RecentThings();
         src.setBackground(UIManager.getColor("TextField.inactiveBackground"));
     }
-    public void RecentThings(){
-    
-               DefaultTableModel model = (DefaultTableModel)table.getModel();
-               DefaultTableModel dm = (DefaultTableModel)table.getModel();
-dm.getDataVector().removeAllElements();
-dm.fireTableDataChanged(); 
-Date tmpdt = new Date();
-SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-String dt = dateFormat.format(tmpdt);
-System.out.println(dt);
-Scanner read ;
+
+    public void RecentThings() {
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        DefaultTableModel dm = (DefaultTableModel) table.getModel();
+        dm.getDataVector().removeAllElements();
+        dm.fireTableDataChanged();
+        Date tmpdt = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dt = dateFormat.format(tmpdt);
+        System.out.println(dt);
+        Scanner read;
         try {
-            read = new Scanner(new File(ITMadd+"/item.txt"),"UTF-8");
-        
+            read = new Scanner(new File(ITMadd + "/item.txt"), "UTF-8");
+
             read.useDelimiter("\\n");
-            while (read.hasNext())                    // It's for Item ... equals to the number of item
-{
+            while (read.hasNext()) // It's for Item ... equals to the number of item
+            {
 
-                float[] Sell={-1,-1,-1,-1,-1};float[] Buy={-1,-1,-1,-1,-1};
-                String icode,iEname = null,iHname="";
-                boolean b=false,s=false; //Done or not
+                float[] Sell = {-1, -1, -1, -1, -1};
+                float[] Buy = {-1, -1, -1, -1, -1};
+                String icode, iEname = null, iHname = "";
+                boolean b = false, s = false; //Done or not
 
-               
-      //read.nextLine();
-      icode = read.nextLine();
-      System.out.println(icode);
-      Scanner inread ;
-                File tmp = new File(ITMadd+"/"+icode+"/profile.txt");           // to get the name of item
+                //read.nextLine();
+                icode = read.nextLine();
+                System.out.println(icode);
+                Scanner inread;
+                File tmp = new File(ITMadd + "/" + icode + "/profile.txt");           // to get the name of item
                 boolean fs = tmp.exists();
-                if(fs){
-                inread = new Scanner(new File(ITMadd+"/"+icode+"/profile.txt"),"UTF-8");          
-                inread.useDelimiter("\\n");
-                inread.nextLine();                // name of item having code ccode
-                iEname = inread.nextLine();
-                iHname = inread.nextLine();
-                inread.close();
+                if (fs) {
+                    inread = new Scanner(new File(ITMadd + "/" + icode + "/profile.txt"), "UTF-8");
+                    inread.useDelimiter("\\n");
+                    inread.nextLine();                // name of item having code ccode
+                    iEname = inread.nextLine();
+                    iHname = inread.nextLine();
+                    inread.close();
 
                 }
-                int conter =0;
-                String tdt=dt;
-                for(tdt=NamingDate.mainn(tdt);conter<60;conter++,tdt=datem15.mainn(tdt)){
-       tmp = new File(ITMadd+"/"+icode+"/Status/"+NamingDateName.mainn(tdt)+".txt");            // to get the name of item
-       fs = tmp.exists();
-      if(fs){
-      if(Sell[0]>0) s = true;
-      if(Buy[0]>0) b = true;
-      //System.out.println("s:"+s+"b:"+b);
-          inread = new Scanner(new File(ITMadd+"/"+icode+"/Status/"+NamingDateName.mainn(tdt)+".txt"),"UTF-8");          
-      inread.useDelimiter(",|\\n");
-      inread.nextLine();
-      inread.nextLine();
-      while(inread.hasNext()){
-      String dtt=inread.next();//System.out.println("1:"+inread.next());
-      inread.next();//System.out.println("2:"+inread.next());
-      String qty=inread.next();
-      String rate=  inread.next();
-      inread.next();//System.out.println("3:"+inread.next());
-      inread.next();//System.out.println("4:"+inread.next());
-      //inread.next();
-      String SupCon =inread.next();
-      SupCon=SupCon.substring(0, SupCon.length()-1);
+                int conter = 0;
+                String tdt = dt;
+                for (tdt = ShortFunction.NamingDate(tdt); conter < 60; conter++, tdt = ShortFunction.Date_minus(tdt)) {
+                    tmp = new File(ITMadd + "/" + icode + "/Status/" + ShortFunction.NamingDateName(tdt) + ".txt");            // to get the name of item
+                    fs = tmp.exists();
+                    if (fs) {
+                        if (Sell[0] > 0) {
+                            s = true;
+                        }
+                        if (Buy[0] > 0) {
+                            b = true;
+                        }
+                        //System.out.println("s:"+s+"b:"+b);
+                        inread = new Scanner(new File(ITMadd + "/" + icode + "/Status/" + ShortFunction.NamingDateName(tdt) + ".txt"), "UTF-8");
+                        inread.useDelimiter(",|\\n");
+                        inread.nextLine();
+                        inread.nextLine();
+                        while (inread.hasNext()) {
+                            String dtt = inread.next();//System.out.println("1:"+inread.next());
+                            inread.next();//System.out.println("2:"+inread.next());
+                            String qty = inread.next();
+                            String rate = inread.next();
+                            inread.next();//System.out.println("3:"+inread.next());
+                            inread.next();//System.out.println("4:"+inread.next());
+                            //inread.next();
+                            String SupCon = inread.next();
+                            SupCon = SupCon.substring(0, SupCon.length() - 1);
       //System.out.println("Qty:"+qty+" rate:"+rate+" SupCon:"+SupCon);
-      //System.out.println("SupCon:"+SupCon+" Party:"+SupCon.equalsIgnoreCase("Party")+" Customer:"+SupCon.equalsIgnoreCase("Customer"));
-      if(SupCon.equalsIgnoreCase("Party")&&Float.valueOf(qty)>0){
-          //System.out.println("Inside First ");
-          if(!b) { //System.out.println("BRate:"+rate);
-              Buy=insert(Buy,Float.valueOf(rate));
-             
-          }
-          
-      }else{
-          //System.out.println("12 Inside Second ");
-          if(SupCon.equalsIgnoreCase("Customer")&&Float.valueOf(qty)<0){
-              //System.out.println("Inside Second ");
-          if(!s)  {//System.out.println("SRate:"+rate);
-          Sell=insert(Sell,Float.valueOf(rate));
-          
-          }
-      }
-          
-      }
-      
-      }
-      inread.close();
-      }
+                            //System.out.println("SupCon:"+SupCon+" Party:"+SupCon.equalsIgnoreCase("Party")+" Customer:"+SupCon.equalsIgnoreCase("Customer"));
+                            if (SupCon.equalsIgnoreCase("Party") && Float.valueOf(qty) > 0) {
+                                //System.out.println("Inside First ");
+                                if (!b) { //System.out.println("BRate:"+rate);
+                                    Buy = insert(Buy, Float.valueOf(rate));
 
-     
-      
-           
+                                }
+
+                            } else {
+                                //System.out.println("12 Inside Second ");
+                                if (SupCon.equalsIgnoreCase("Customer") && Float.valueOf(qty) < 0) {
+                                    //System.out.println("Inside Second ");
+                                    if (!s) {//System.out.println("SRate:"+rate);
+                                        Sell = insert(Sell, Float.valueOf(rate));
+
+                                    }
+                                }
+
+                            }
+
+                        }
+                        inread.close();
+                    }
+
 //TextIO.putln(ccode +"  ---> "+CStatus);
-        }
-                System.out.println("Buy:"+avg(Buy)+"  Sell:"+avg(Sell));
-                String pa=avg(Buy),pl="####",sa=avg(Sell),sl="####";
-                 System.out.println("Buy:"+Buy[4]+" "+Buy[3]+" "+Buy[2]+" "+Buy[1]+" "+Buy[0]);
-                System.out.println("Sell:"+Sell[4]+" "+Sell[3]+" "+Sell[2]+" "+Sell[1]+" "+Sell[0]);
-                if(Buy[4]>0) pl=String.format("%.1f", Buy[4]);
-                if(Sell[4]>0) sl=String.format("%.1f", Sell[4]);
-                if(lang.compareToIgnoreCase("English")!=0){
-                model.addRow(new Object[]{icode,iHname+" / "+iEname,pl,pa,sl,sa});
-                }else{
-                   model.addRow(new Object[]{icode,iEname+" / "+iHname,pl,pa,sl,sa}); 
+                }
+                System.out.println("Buy:" + avg(Buy) + "  Sell:" + avg(Sell));
+                String pa = avg(Buy), pl = "####", sa = avg(Sell), sl = "####";
+                System.out.println("Buy:" + Buy[4] + " " + Buy[3] + " " + Buy[2] + " " + Buy[1] + " " + Buy[0]);
+                System.out.println("Sell:" + Sell[4] + " " + Sell[3] + " " + Sell[2] + " " + Sell[1] + " " + Sell[0]);
+                if (Buy[4] > 0) {
+                    pl = String.format("%.1f", Buy[4]);
+                }
+                if (Sell[4] > 0) {
+                    sl = String.format("%.1f", Sell[4]);
+                }
+                if (lang.compareToIgnoreCase("English") != 0) {
+                    model.addRow(new Object[]{icode, iHname + " / " + iEname, pl, pa, sl, sa});
+                } else {
+                    model.addRow(new Object[]{icode, iEname + " / " + iHname, pl, pa, sl, sa});
                 }
 //break;        
-}
-read.close();
-} catch (FileNotFoundException ex) {
+            }
+            read.close();
+        } catch (FileNotFoundException ex) {
             JLabel label = new JLabel("Item item. error !!! Error0015");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-       
-        } 
-}
-    public float[] insert(float[] gt,float vlu){
-      float[] res ={-1,-1,-1,-1,-1};
-      for(int i=0;i<4;++i){
-          res[i]=gt[i+1];
-      }
-      res[4]=vlu;
-      return res;
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+
+        }
     }
-    public String avg(float[] values){
-        float avgv =0;int count=0;
-        for(int i=0;i<5;++i){
-            if(values[i]>0){
-              avgv+=values[i];  ++count;
+
+    public float[] insert(float[] gt, float vlu) {
+        float[] res = {-1, -1, -1, -1, -1};
+        for (int i = 0; i < 4; ++i) {
+            res[i] = gt[i + 1];
+        }
+        res[4] = vlu;
+        return res;
+    }
+
+    public String avg(float[] values) {
+        float avgv = 0;
+        int count = 0;
+        for (int i = 0; i < 5; ++i) {
+            if (values[i] > 0) {
+                avgv += values[i];
+                ++count;
             }
         }
-        if(count!=0)
-        avgv=avgv/count;
+        if (count != 0) {
+            avgv = avgv / count;
+        }
         String str = "####";
-        if(avgv>0)
-                str= String.format("%.1f", avgv);
+        if (avgv > 0) {
+            str = String.format("%.1f", avgv);
+        }
         return str;
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -272,118 +285,110 @@ read.close();
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         RecentThings();
     }//GEN-LAST:event_jButton1ActionPerformed
-int i=0;
+    int i = 0;
     private void srcKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_srcKeyReleased
-                final DefaultTableModel model = (DefaultTableModel)table.getModel();
+        final DefaultTableModel model = (DefaultTableModel) table.getModel();
         final TableModel tm = table.getModel();
-           int t=table.getRowCount();
-           
+        int t = table.getRowCount();
+
 //table.scrollRectToVisible(null);
-           //table.clearSelection();
-           //System.out.println("RowCount:"+t);
-                String tb;
-                tb=src.getText();
-                
-                //top.setText("1"+tb);
-                    if(!tb.isEmpty()){
-                        int k=evt.getKeyCode();
-                if(k==10){
-                    i=table.getSelectedRow();
-                    //System.out.println("Eneter is Pressed::"+i);
-                    for( ++i;i<t;++i){
+        //table.clearSelection();
+        //System.out.println("RowCount:"+t);
+        String tb;
+        tb = src.getText();
+
+        //top.setText("1"+tb);
+        if (!tb.isEmpty()) {
+            int k = evt.getKeyCode();
+            if (k == 10) {
+                i = table.getSelectedRow();
+                //System.out.println("Eneter is Pressed::"+i);
+                for (++i; i < t; ++i) {
                         //System.out.println("i="+i);
                     //tb=src.getText();
-                        //top.setText("3"+tb);
-                    String n = (String)tm.getValueAt(i, 0);
-                    n=n.toUpperCase();
-                    tb=tb.toUpperCase();
+                    //top.setText("3"+tb);
+                    String n = (String) tm.getValueAt(i, 0);
+                    n = n.toUpperCase();
+                    tb = tb.toUpperCase();
                     //System.out.println("tb="+tb+"   n="+n);
-                    if(n.contains(tb))
-                    {
+                    if (n.contains(tb)) {
                         //System.out.println("yes:"+tb+":::"+i);
                         table.setRowSelectionInterval(i, i);
-                             table.getSelectionModel().setSelectionInterval(i, i);
-                             table.scrollRectToVisible(new Rectangle(table.getCellRect(i+5, 0, true)));
+                        table.getSelectionModel().setSelectionInterval(i, i);
+                        table.scrollRectToVisible(new Rectangle(table.getCellRect(i + 5, 0, true)));
                         break;
-                    //table.selectAll();
-                    }else{
-                        
-                            String c = (String)tm.getValueAt(i, 1);
-                        c=c.toUpperCase();
-                            if(c.contains(tb)){       //mobile no
-                             table.setRowSelectionInterval(i, i); 
-                             table.getSelectionModel().setSelectionInterval(i, i);
-                             table.scrollRectToVisible(new Rectangle(table.getCellRect(i+5, 0, true)));
-                             break;
-                            }
-                            else{
-                                
-                                table.clearSelection();
-                                
-                            }
-                        
+                        //table.selectAll();
+                    } else {
+
+                        String c = (String) tm.getValueAt(i, 1);
+                        c = c.toUpperCase();
+                        if (c.contains(tb)) {       //mobile no
+                            table.setRowSelectionInterval(i, i);
+                            table.getSelectionModel().setSelectionInterval(i, i);
+                            table.scrollRectToVisible(new Rectangle(table.getCellRect(i + 5, 0, true)));
+                            break;
+                        } else {
+
+                            table.clearSelection();
+
+                        }
+
                     }
-                    
-                    
-                 
-                    
+
                 }
-                    if(i==t){
-                        table.setRowSelectionInterval(0, 0);
-           table.getSelectionModel().setSelectionInterval(0, 0);
-table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
-table.clearSelection();
-                    }
-                } 
-                else{
+                if (i == t) {
                     table.setRowSelectionInterval(0, 0);
-           table.getSelectionModel().setSelectionInterval(0, 0);
-table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
+                    table.getSelectionModel().setSelectionInterval(0, 0);
+                    table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
                     table.clearSelection();
-                        
-                        i=table.getSelectedRow();
-                for( ++i;i<t;++i){
-                     
-                    String n = (String)tm.getValueAt(i, 0);
-                    n=n.toUpperCase();
-                    tb=tb.toUpperCase();
-                     
-                    if(n.contains(tb))
-                    {
-                         
+                }
+            } else {
+                table.setRowSelectionInterval(0, 0);
+                table.getSelectionModel().setSelectionInterval(0, 0);
+                table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
+                table.clearSelection();
+
+                i = table.getSelectedRow();
+                for (++i; i < t; ++i) {
+
+                    String n = (String) tm.getValueAt(i, 0);
+                    n = n.toUpperCase();
+                    tb = tb.toUpperCase();
+
+                    if (n.contains(tb)) {
+
                         table.setRowSelectionInterval(i, i);
-                             table.getSelectionModel().setSelectionInterval(i, i);
-                             table.scrollRectToVisible(new Rectangle(table.getCellRect(i+5, 0, true)));
+                        table.getSelectionModel().setSelectionInterval(i, i);
+                        table.scrollRectToVisible(new Rectangle(table.getCellRect(i + 5, 0, true)));
                         break;
-                    //table.selectAll();
-                    }else{
-                        
-                            String c = (String)tm.getValueAt(i, 1);
-                        c=c.toUpperCase();
-                            if(c.contains(tb)){       //mobile no
-                             table.setRowSelectionInterval(i, i);
-                             table.getSelectionModel().setSelectionInterval(i, i);
-                             table.scrollRectToVisible(new Rectangle(table.getCellRect(i+5, 0, true)));
-                             break;
-                            }
-                            else{
-                                table.clearSelection();
+                        //table.selectAll();
+                    } else {
+
+                        String c = (String) tm.getValueAt(i, 1);
+                        c = c.toUpperCase();
+                        if (c.contains(tb)) {       //mobile no
+                            table.setRowSelectionInterval(i, i);
+                            table.getSelectionModel().setSelectionInterval(i, i);
+                            table.scrollRectToVisible(new Rectangle(table.getCellRect(i + 5, 0, true)));
+                            break;
+                        } else {
+                            table.clearSelection();
                                 //System.out.println("nulli:"+table.getSelectedRow());
-                                //src.requestFocus();
-                                //table.setRowSelectionInterval(3, 3);
-                            }
-                       
+                            //src.requestFocus();
+                            //table.setRowSelectionInterval(3, 3);
+                        }
+
                     }
-                      
-                } 
-                if(i==t){
-                        table.setRowSelectionInterval(0, 0);
-           table.getSelectionModel().setSelectionInterval(0, 0);
-table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
-table.clearSelection();
-                    }
-                    }
-                 }
+
+                }
+                if (i == t) {
+                    table.setRowSelectionInterval(0, 0);
+                    table.getSelectionModel().setSelectionInterval(0, 0);
+                    table.scrollRectToVisible(new Rectangle(table.getCellRect(0, 0, true)));
+                    table.clearSelection();
+                }
+            }
+        }
     }//GEN-LAST:event_srcKeyReleased
 
     /**
@@ -416,7 +421,7 @@ table.clearSelection();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Recent("D:/Shopy/Shopy","src/Icons/logo.png","1501","Hindi","20210101-20210628","01/01/2021","28/06/2021").setVisible(true);
+                new Recent("D:/Shopy/Shopy", "src/Icons/logo.png", "1501", "Hindi", "20210101-20210628", "01/01/2021", "28/06/2021").setVisible(true);
             }
         });
     }

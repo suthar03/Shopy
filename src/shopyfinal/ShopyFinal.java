@@ -21,34 +21,35 @@ public class ShopyFinal {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String baseadd ="D:/Shopy/Shopy";
+        String baseadd = "D:/Shopy/Shopy";
         String logo = "src/Icons/logo.png";
-        
+
         try {
-            
-            baseadd=GetLine.mainn("src/data/base.txt",1);
+
+            baseadd = ShortFunction.GetLine("src/data/base.txt", 1);
             File nf = new File(baseadd);
-            if(!nf.exists()){
+            if (!nf.exists()) {
                 //int yon;
-               int yon = JOptionPane.showConfirmDialog(null,"Are you here for first time ?","Confirmation ....",JOptionPane.OK_OPTION);
-        if(yon==0){//YES 
-            //Create a baseadd directory
-            if(!nf.exists()){nf.mkdirs(); }
-        }else{
-             JLabel label1 = new JLabel("There Is Problem of base Directory");        
-        label1.setFont(new Font("Arial", Font.BOLD, 18));        
-        JOptionPane.showMessageDialog(null,label1,"ERROR",JOptionPane.WARNING_MESSAGE);
-        }
-        }
-            
-    
+                int yon = JOptionPane.showConfirmDialog(null, "Are you here for first time ?", "Confirmation ....", JOptionPane.OK_OPTION);
+                if (yon == 0) {//YES 
+                    //Create a baseadd directory
+                    if (!nf.exists()) {
+                        nf.mkdirs();
+                    }
+                } else {
+                    JLabel label1 = new JLabel("There Is Problem of base Directory");
+                    label1.setFont(new Font("Arial", Font.BOLD, 18));
+                    JOptionPane.showMessageDialog(null, label1, "ERROR", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
             User.setBaseAdd(baseadd);
-            new NewPassword2().setVisible(true);
+            new Password().setVisible(true);
         } catch (IOException ex) {
-            JLabel label1 = new JLabel("There Is Problem At Initial"+ex);        
-        label1.setFont(new Font("Arial", Font.BOLD, 18));        
-        JOptionPane.showMessageDialog(null,label1,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JLabel label1 = new JLabel("There Is Problem At Initial" + ex);
+            label1.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label1, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
 }

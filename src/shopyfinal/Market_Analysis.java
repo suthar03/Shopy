@@ -571,7 +571,7 @@ public class Market_Analysis extends javax.swing.JFrame {
         } else {
             cmrprt = "party.txt";
         }
-        if (RepeatationIntCase.mainn(AddP, cmrprt, cdd) == 1) {          //<<<<<<<<<<<<<<<<<<<Name field completion automatically
+        if (ShortFunction.RepeatationIntCase(AddP, cmrprt, cdd) == 1) {          //<<<<<<<<<<<<<<<<<<<Name field completion automatically
 
             Scanner read;
 
@@ -607,25 +607,25 @@ public class Market_Analysis extends javax.swing.JFrame {
             str = "customer.txt";
         }
         try {
-            if (repeatation.mainn(AddP, str, pcode) == 1) {
+            if (ShortFunction.repeatation(AddP, str, pcode) == 1) {
 
 //#########################################################################################################################################################              
                 File tmp = new File(AddP + "/" + pcode + "/profile.txt");
                 boolean fs = tmp.exists();
 
 //########################################################################################################
-                for (String ttd = dt1; DateInBetween.mainn(dt1, ttd, dt2); ttd = datep15.mainn(ttd)) {                             //To find the earliest Existing file
-                    tmp = new File(AddP + "/" + pcode + "/Pending/Taken/" + NamingDateName.mainn(ttd) + ".txt");
+                for (String ttd = dt1; ShortFunction.DateInBetween(dt1, ttd, dt2); ttd = ShortFunction.Date_plus(ttd)) {                             //To find the earliest Existing file
+                    tmp = new File(AddP + "/" + pcode + "/Pending/Taken/" + ShortFunction.NamingDateName(ttd) + ".txt");
                     fs = tmp.exists();
                     if (fs) {
-                        //    System.out.print(AddP+"/"+pcode+"/Pending/Taken/"+NamingDateName.mainn(ttd)+".txt");
+                        //    System.out.print(AddP+"/"+pcode+"/Pending/Taken/"+ShortFunction.NamingDateName(ttd)+".txt");
                         inread = new Scanner(tmp, "UTF-8");          // to get the name of customer
                         inread.useDelimiter(",|\\n");
                         inread.nextLine();
                         //inread.nextLine();
                         while (inread.hasNext()) {
                             String datee = inread.next();
-                            if (DateInBetween.mainn(dt1, datee, dt2)) {
+                            if (ShortFunction.DateInBetween(dt1, datee, dt2)) {
                                 inread.next();
                                 inread.next();
                                 inread.next();
@@ -662,15 +662,15 @@ public class Market_Analysis extends javax.swing.JFrame {
             str = "customer.txt";
         }
         try {
-            if (repeatation.mainn(AddP, str, pcode) == 1) {
+            if (ShortFunction.repeatation(AddP, str, pcode) == 1) {
 
 //#########################################################################################################################################################              
                 File tmp = new File(AddP + "/" + pcode + "/profile.txt");
                 boolean fs = tmp.exists();
 
 //########################################################################################################
-                for (String ttd = dt1; DateInBetween.mainn(dt1, ttd, dt2); ttd = datep15.mainn(ttd)) {                             //To find the earliest Existing file
-                    tmp = new File(AddP + "/" + pcode + "/Pending/Given/" + NamingDateName.mainn(ttd) + ".txt");
+                for (String ttd = dt1; ShortFunction.DateInBetween(dt1, ttd, dt2); ttd = ShortFunction.Date_plus(ttd)) {                             //To find the earliest Existing file
+                    tmp = new File(AddP + "/" + pcode + "/Pending/Given/" + ShortFunction.NamingDateName(ttd) + ".txt");
                     fs = tmp.exists();
                     if (fs) {
 
@@ -680,7 +680,7 @@ public class Market_Analysis extends javax.swing.JFrame {
                         inread.nextLine();
                         while (inread.hasNext()) {
                             String datee = inread.next();
-                            if (DateInBetween.mainn(dt1, datee, dt2)) {
+                            if (ShortFunction.DateInBetween(dt1, datee, dt2)) {
                                 inread.next();
                                 inread.next();
                                 inread.next();

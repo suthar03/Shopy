@@ -23,50 +23,51 @@ public class msg extends javax.swing.JFrame {
     /**
      * Creates new form msg
      */
-    String baseadd,user,logo;
-    String lang="English";
-    String lb1="Language Updated Successfully!!",lb2="Please Restart the Application to get application in your updated language";
-    
-    public msg(String base,String golo) throws IOException {
-        baseadd=base;
-        logo=golo;
+    String baseadd, user, logo;
+    String lang = "English";
+    String lb1 = "Language Updated Successfully!!", lb2 = "Please Restart the Application to get application in your updated language";
+
+    public msg(String base, String golo) throws IOException {
+        baseadd = base;
+        logo = golo;
         try {
             this.setIconImage(ImageIO.read(new File(logo)));
         } catch (IOException ex) {
             JLabel label = new JLabel("Logo Problem");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
         try {
-            user = GetLine.mainn(baseadd+"/Cuser.txt", 2);
+            user = ShortFunction.GetLine(baseadd + "/Cuser.txt", 2);
         } catch (IOException ex) {
-             JLabel label = new JLabel("Current user !!! Error0003");
+            JLabel label = new JLabel("Current user !!! Error0003");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-      }
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
         initComponents();
         this.setLocationRelativeTo(null);
         try {
-        lang = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 1);
-        System.out.println(lang);
+            lang = ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 1);
+            System.out.println(lang);
         } catch (IOException ex) {
-        JLabel label = new JLabel("Configuration Error !!! Error0003");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JLabel label = new JLabel("Configuration Error !!! Error0003");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
-        System.out.println(GetLine.mainn(baseadd+"/"+user+"/conf.txt", 2));
-        
-        if(lang.compareToIgnoreCase("English")!=0){
+        System.out.println(ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 2));
+
+        if (lang.compareToIgnoreCase("English") != 0) {
             hdlbl.setText("अपनी भाषा चुने :");
             save.setText("सेव करे");
             close.setText("बंद करे");
-            lb1="भाषा सफलतापूर्वक अपडेट की गई !! ";
-            lb2="प्लीज रिस्टार्ट app तो गेट app इन योर updated भाषा ॥ ";
-            
+            lb1 = "भाषा सफलतापूर्वक अपडेट की गई !! ";
+            lb2 = "प्लीज रिस्टार्ट app तो गेट app इन योर updated भाषा ॥ ";
+
         }
-        Gmsg.setText(GetLine.mainn(baseadd+"/"+user+"/conf.txt", 2));
-        
+        Gmsg.setText(ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 2));
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -160,7 +161,7 @@ public class msg extends javax.swing.JFrame {
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
         try {
             //Replace Line 2
-            ReplaceLineWN.mainn(baseadd+"/"+user, "conf.txt",2,Gmsg.getText());
+            ShortFunction.ReplaceLineWN(baseadd + "/" + user, "conf.txt", 2, Gmsg.getText());
             this.dispose();
         } catch (IOException ex) {
             Logger.getLogger(msg.class.getName()).log(Level.SEVERE, null, ex);

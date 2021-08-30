@@ -19,7 +19,9 @@ public class MessageOnTimeOfSuccess extends javax.swing.JFrame {
     //int tm=500;
     private static final int TIMER_DELAY = 1500;
     private Timer timer;
+
     //int sx=500,sy=440;String msg="Successful !!";
+
     public MessageOnTimeOfSuccess(String msg) {
         initComponents();
         this.setBounds(0, 0, 531, 140);
@@ -29,18 +31,18 @@ public class MessageOnTimeOfSuccess extends javax.swing.JFrame {
         //timer.restart(); 
         timer = new Timer(TIMER_DELAY, e -> {
                 //System.out.println("Current Time is: " + new Date(System.currentTimeMillis()));
-                
-                if(true){
-                    System.out.println("BRESKED");
-                    timer.setRepeats(false);
-                    this.dispose();
-                }
-                
-                });
-               
-                 timer.restart(); 
+
+            if (true) {
+                System.out.println("BRESKED");
+                timer.setRepeats(false);
+                this.dispose();
+            }
+
+        });
+
+        timer.restart();
                  //timer.stop();
-                 
+
     }
 
     /**
@@ -83,10 +85,11 @@ public class MessageOnTimeOfSuccess extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void mainn(String m){
-        
+    public static void mainn(String m) {
+
         new MessageOnTimeOfSuccess(m).setVisible(true);
     }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -129,7 +132,7 @@ public class MessageOnTimeOfSuccess extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-               // new MessageOnTimeOfSuccess("CUstomer ").setVisible(true);
+                // new MessageOnTimeOfSuccess("CUstomer ").setVisible(true);
             }
         });
     }

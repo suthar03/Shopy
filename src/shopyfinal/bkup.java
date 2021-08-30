@@ -24,54 +24,55 @@ public class bkup extends javax.swing.JFrame {
     /**
      * Creates new form msg
      */
-    String baseadd,user,logo;
-    String lang="English";
-    String lb1="Drive Updated Successfully!!";
-    String bkadd;    
-    public bkup(String base,String golo) throws IOException {
-        baseadd=base;
-        logo=golo;
+    String baseadd, user, logo;
+    String lang = "English";
+    String lb1 = "Drive Updated Successfully!!";
+    String bkadd;
+
+    public bkup(String base, String golo) throws IOException {
+        baseadd = base;
+        logo = golo;
         try {
             this.setIconImage(ImageIO.read(new File(logo)));
         } catch (IOException ex) {
             JLabel label = new JLabel("Logo Problem");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
         try {
-            user = GetLine.mainn(baseadd+"/Cuser.txt", 2);
+            user = ShortFunction.GetLine(baseadd + "/Cuser.txt", 2);
         } catch (IOException ex) {
-             JLabel label = new JLabel("Current user !!! Error0003");
+            JLabel label = new JLabel("Current user !!! Error0003");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-      }
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        }
         initComponents();
         this.setLocationRelativeTo(null);
         try {
-        lang = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 1);
-        System.out.println(lang);
+            lang = ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 1);
+            System.out.println(lang);
         } catch (IOException ex) {
-        JLabel label = new JLabel("Configuration Error !!! Error0003");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JLabel label = new JLabel("Configuration Error !!! Error0003");
+            label.setFont(new Font("Arial", Font.BOLD, 18));
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
-        System.out.println(GetLine.mainn(baseadd+"/"+user+"/conf.txt", 2));
-        
-        if(lang.compareToIgnoreCase("English")!=0){
+        System.out.println(ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 2));
+
+        if (lang.compareToIgnoreCase("English") != 0) {
             hdlbl.setText(": बैकअप Location :");
             save.setText("सेव करे");
             close.setText("बंद करे");
-            lb1="बैकअप सेटिंग सफलतापूर्वक अपडेट किया गया !! ";
-            
+            lb1 = "बैकअप सेटिंग सफलतापूर्वक अपडेट किया गया !! ";
+
         }
-        bkadd = GetLine.mainn(baseadd+"/"+user+"/conf.txt", 3);
-        File fg=new File(bkadd);
-        Autobkup.setState(Boolean.valueOf(GetLine.mainn(baseadd+"/"+user+"/conf.txt", 4)));
+        bkadd = ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 3);
+        File fg = new File(bkadd);
+        Autobkup.setState(Boolean.valueOf(ShortFunction.GetLine(baseadd + "/" + user + "/conf.txt", 4)));
         //flc.changeToParentDirectory();
         flc.setSelectedFile(fg);
-        
-        
+
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -181,18 +182,18 @@ public class bkup extends javax.swing.JFrame {
         }// </editor-fold>//GEN-END:initComponents
 
     private void saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActionPerformed
-      bkadd=flc.getSelectedFile().getAbsolutePath();
+        bkadd = flc.getSelectedFile().getAbsolutePath();
         try {
             //Replace Line 2
-            ReplaceLineWN.mainn(baseadd+"/"+user, "conf.txt",3,bkadd);
-            ReplaceLineWN.mainn(baseadd+"/"+user, "conf.txt",4,String.valueOf(Autobkup.getState()));
-            
+            ShortFunction.ReplaceLineWN(baseadd + "/" + user, "conf.txt", 3, bkadd);
+            ShortFunction.ReplaceLineWN(baseadd + "/" + user, "conf.txt", 4, String.valueOf(Autobkup.getState()));
+
             this.dispose();
         } catch (IOException ex) {
-            JLabel label = new JLabel("Not Saved"+ex);
+            JLabel label = new JLabel("Not Saved" + ex);
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-            
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+
         }
     }//GEN-LAST:event_saveActionPerformed
 
@@ -202,44 +203,45 @@ public class bkup extends javax.swing.JFrame {
 
     private void flcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flcActionPerformed
         if (evt.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
-               System.out.println("File selected: " + flc.getSelectedFile());
-               bkadd=flc.getSelectedFile().getAbsolutePath();
-               save.requestFocus();
-               
-            }
+            System.out.println("File selected: " + flc.getSelectedFile());
+            bkadd = flc.getSelectedFile().getAbsolutePath();
+            save.requestFocus();
+
+        }
         if (evt.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
             this.setAlwaysOnTop(false);
-            
-               JLabel label = new JLabel("You Must Choose a Direcotry for backup Storage");
+
+            JLabel label = new JLabel("You Must Choose a Direcotry for backup Storage");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
             System.out.println("After");
             this.setAlwaysOnTop(true);
-               
-            }
+
+        }
     }//GEN-LAST:event_flcActionPerformed
- /*JPanel pnl2;
-    public void createPanel3() {
+    /*JPanel pnl2;
+     public void createPanel3() {
         
-        System.out.println("Its Here");
-      pnl2 = new JPanel();
-      pnl2.setLayout(new BorderLayout());
-      pnl2.setPreferredSize(new Dimension(400, 100));
-      pnl2.setMinimumSize(new Dimension(100, 50));
-        this.add(pnl2).setVisible(true);
-        pnl2.setVisible(true);
-      final JFileChooser fileChooser = new JFileChooser();
-      fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-      fileChooser.setDialogTitle("Browse naar de  locatie waar je de gesorteerde bestanden wil zetten en klik op \"OPEN\"");
-      pnl2.add(fileChooser, BorderLayout.NORTH);
-      fileChooser.addActionListener(new ActionListener() {
-         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
-               System.out.println("File selected: " + fileChooser.getSelectedFile());
-            }
-         }
-      });
-   }*/
+     System.out.println("Its Here");
+     pnl2 = new JPanel();
+     pnl2.setLayout(new BorderLayout());
+     pnl2.setPreferredSize(new Dimension(400, 100));
+     pnl2.setMinimumSize(new Dimension(100, 50));
+     this.add(pnl2).setVisible(true);
+     pnl2.setVisible(true);
+     final JFileChooser fileChooser = new JFileChooser();
+     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+     fileChooser.setDialogTitle("Browse naar de  locatie waar je de gesorteerde bestanden wil zetten en klik op \"OPEN\"");
+     pnl2.add(fileChooser, BorderLayout.NORTH);
+     fileChooser.addActionListener(new ActionListener() {
+     public void actionPerformed(ActionEvent e) {
+     if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
+     System.out.println("File selected: " + fileChooser.getSelectedFile());
+     }
+     }
+     });
+     }*/
+
     /**
      * @param args the command line arguments
      */

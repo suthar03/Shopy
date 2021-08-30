@@ -300,7 +300,7 @@ public class Best_Worst extends javax.swing.JFrame {
         if (CMRorPRT.getSelectedIndex() == 0) {
             str = "customer.txt";
         }
-        if (RepeatationIntCase.mainn(Add, str, cdd) == 1) {          //<<<<<<<<<<<<<<<<<<<Name field completion automatically
+        if (ShortFunction.RepeatationIntCase(Add, str, cdd) == 1) {          //<<<<<<<<<<<<<<<<<<<Name field completion automatically
 
             Scanner read;
 
@@ -362,24 +362,24 @@ public class Best_Worst extends javax.swing.JFrame {
         String CGstr1 = "000.00", CTstr1 = "000.00";
         System.out.print("Code:" + cd + " dt1:" + dt1 + " dt2:" + dt2);
         pcode = cd;//read.nextLine();
-        //System.out.println(pcode+" rep:"+repeatation.mainn(Add, "customer.txt", pcode));
+        //System.out.println(pcode+" rep:"+ShortFunction.repeatation(Add, "customer.txt", pcode));
         Scanner inread;
         String str = "party.txt";
         if (CMRorPRT.getSelectedIndex() == 0) {
             str = "customer.txt";
         }
         try {
-            if (repeatation.mainn(Add, str, pcode) == 1) {
+            if (ShortFunction.repeatation(Add, str, pcode) == 1) {
 
 //#########################################################################################################################################################              
                 File tmp = new File(Add + "/" + pcode + "/profile.txt");
                 boolean fs = tmp.exists();
 
 //########################################################################################################
-//System.out.println(Add+"/"+pcode+"/Pending/Given/"+NamingDateName.mainn(dsd)+".txt");
-                for (String ttd = dt1; DateInBetween.mainn(dt1, ttd, dt2); ttd = datep15.mainn(ttd)) {                             //To find the earliest Existing file
-                    tmp = new File(Add + "/" + pcode + "/Pending/Given/" + NamingDateName.mainn(ttd) + ".txt");
-                    System.out.println(Add + "/" + pcode + "/Pending/Given/" + NamingDateName.mainn(ttd) + ".txt        ::" + dt1 + ":" + ttd + ":" + dt2 + ":::" + DateInBetween.mainn(dt1, ttd, dt2));
+//System.out.println(Add+"/"+pcode+"/Pending/Given/"+ShortFunction.NamingDateName(dsd)+".txt");
+                for (String ttd = dt1; ShortFunction.DateInBetween(dt1, ttd, dt2); ttd = ShortFunction.Date_plus(ttd)) {                             //To find the earliest Existing file
+                    tmp = new File(Add + "/" + pcode + "/Pending/Given/" + ShortFunction.NamingDateName(ttd) + ".txt");
+                    System.out.println(Add + "/" + pcode + "/Pending/Given/" + ShortFunction.NamingDateName(ttd) + ".txt        ::" + dt1 + ":" + ttd + ":" + dt2 + ":::" + ShortFunction.DateInBetween(dt1, ttd, dt2));
                     fs = tmp.exists();
                     if (fs) {
 
@@ -389,7 +389,7 @@ public class Best_Worst extends javax.swing.JFrame {
                         inread.nextLine();
                         while (inread.hasNext()) {
                             String datee = inread.next();
-                            if (DateInBetween.mainn(dt1, datee, dt2)) {
+                            if (ShortFunction.DateInBetween(dt1, datee, dt2)) {
                                 inread.next();
                                 inread.next();
                                 inread.next();
@@ -406,10 +406,10 @@ public class Best_Worst extends javax.swing.JFrame {
                 }
 
 //########################################################################################################
-                for (String ttd = dt1; DateInBetween.mainn(dt1, ttd, dt2); ttd = datep15.mainn(ttd)) {                             //To find the earliest Existing file
-                    // System.out.println(Add+"/"+pcode+"/Pending/Taken/"+NamingDateName.mainn(ttd)+".txt");
-                    tmp = new File(Add + "/" + pcode + "/Pending/Taken/" + NamingDateName.mainn(ttd) + ".txt");
-                    System.out.println(Add + "/" + pcode + "/Pending/Taken/" + NamingDateName.mainn(ttd) + ".txt");
+                for (String ttd = dt1; ShortFunction.DateInBetween(dt1, ttd, dt2); ttd = ShortFunction.Date_plus(ttd)) {                             //To find the earliest Existing file
+                    // System.out.println(Add+"/"+pcode+"/Pending/Taken/"+ShortFunction.NamingDateName(ttd)+".txt");
+                    tmp = new File(Add + "/" + pcode + "/Pending/Taken/" + ShortFunction.NamingDateName(ttd) + ".txt");
+                    System.out.println(Add + "/" + pcode + "/Pending/Taken/" + ShortFunction.NamingDateName(ttd) + ".txt");
                     fs = tmp.exists();
                     if (fs) {
                         inread = new Scanner(tmp, "UTF-8");          // to get the name of customer
@@ -418,7 +418,7 @@ public class Best_Worst extends javax.swing.JFrame {
                         //inread.nextLine();
                         while (inread.hasNext()) {
                             String datee = inread.next();
-                            if (DateInBetween.mainn(dt1, datee, dt2)) {
+                            if (ShortFunction.DateInBetween(dt1, datee, dt2)) {
                                 inread.next();
                                 inread.next();
                                 inread.next();

@@ -20,14 +20,15 @@ import javax.swing.JOptionPane;
  * @author Suthar
  */
 public class CreateNewYear extends javax.swing.JFrame {
-    String IDyear="2020-2020",Syear="01/01/2020",Eyear="01/01/2020";
-    String baseuser="";
+
+    String IDyear = "2020-2020", Syear = "01/01/2020", Eyear = "01/01/2020";
+    String baseuser = "";
     String Curr_IDyear;
 
     /**
      * Creates new form CreateNewYear
      */
-    public CreateNewYear(String buser,String Yr) {
+    public CreateNewYear(String buser, String Yr) {
         baseuser = buser;
         Curr_IDyear = Yr;
         initComponents();
@@ -166,12 +167,12 @@ public class CreateNewYear extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void isEndItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_isEndItemStateChanged
-        if(isEnd.getState()){
+        if (isEnd.getState()) {
             lblEnd.setEnabled(true);
             jEnd.setEnabled(true);
             //lblEnd.setVisible(true);
             //jEnd.setVisible(true);
-        }else{
+        } else {
             lblEnd.setEnabled(false);
             jEnd.setEnabled(false);
             //lblEnd.setVisible(false);
@@ -180,49 +181,51 @@ public class CreateNewYear extends javax.swing.JFrame {
     }//GEN-LAST:event_isEndItemStateChanged
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        
 
-                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-Syear = dateFormat.format(jStart.getDate());
-Eyear = dateFormat.format(jEnd.getDate());
-String year_id = shortFunction.YearID(Syear, Eyear);
-String addYear = baseuser +"/"+ "Years.txt";
-if(!DateInBetween.mainn(Syear, Syear, Eyear)){System.out.println("In This trape"); return;}
-boolean b1 = shortFunction.isAlready(Syear,Eyear,addYear);
-boolean b3 = shortFunction.isYear_ID_Already(year_id,addYear);
-System.out.println(b1+"  "+" "+b3);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Syear = dateFormat.format(jStart.getDate());
+        Eyear = dateFormat.format(jEnd.getDate());
+        String year_id = ShortFunction.YearID(Syear, Eyear);
+        String addYear = baseuser + "/" + "Years.txt";
+        if (!ShortFunction.DateInBetween(Syear, Syear, Eyear)) {
+            System.out.println("In This trape");
+            return;
+        }
+        boolean b1 = ShortFunction.isAlready(Syear, Eyear, addYear);
+        boolean b3 = ShortFunction.isYear_ID_Already(year_id, addYear);
+        System.out.println(b1 + "  " + " " + b3);
 
-if(b1||b3){
-    JLabel label = new JLabel("These dates are already exist in some year Account");
+        if (b1 || b3) {
+            JLabel label = new JLabel("These dates are already exist in some year Account");
             label.setFont(new Font("Arial", Font.BOLD, 18));
-            JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
-}else{
-IDyear= year_id;
-int yon = JOptionPane.showConfirmDialog(null,"Do you want to Continue ??","Confirmation .......",JOptionPane.OK_OPTION);
-       System.out.println(baseuser +"/"+ "Years.txt");
+            JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
+        } else {
+            IDyear = year_id;
+            int yon = JOptionPane.showConfirmDialog(null, "Do you want to Continue ??", "Confirmation .......", JOptionPane.OK_OPTION);
+            System.out.println(baseuser + "/" + "Years.txt");
 
-if(yon==0){//YES   
+            if (yon == 0) {//YES   
                 try {                //set party account to party.txt
 
-                   PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseuser +"/"+ "Years.txt",true), "UTF-8"));
-                    out.println(year_id+","+Syear+","+Eyear);
+                    PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseuser + "/" + "Years.txt", true), "UTF-8"));
+                    out.println(year_id + "," + Syear + "," + Eyear);
                     out.close();
                 } catch (IOException ex) {
                     JLabel label = new JLabel("Years.txt Problem !!! Error00071");
                     label.setFont(new Font("Arial", Font.BOLD, 18));
-                    JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
                 }
                 // We are calling function whic will do erverything 
-                if(shortFunction.YearSetupWhileCreating(baseuser,year_id,Syear,Eyear,Curr_IDyear)){
-                        JLabel label = new JLabel("We have Successfully Create a new Finacical year with all update of previous datas");
-                        label.setFont(new Font("Arial", Font.BOLD, 18));
-                        JOptionPane.showMessageDialog(null,label,"ERROR",JOptionPane.WARNING_MESSAGE);
+                if (ShortFunction.YearSetupWhileCreating(baseuser, year_id, Syear, Eyear, Curr_IDyear)) {
+                    JLabel label = new JLabel("We have Successfully Create a new Finacical year with all update of previous datas");
+                    label.setFont(new Font("Arial", Font.BOLD, 18));
+                    JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
                 }
-    this.dispose();
-   
-}
-}
-    
+                this.dispose();
+
+            }
+        }
+
 
     }//GEN-LAST:event_btnCreateActionPerformed
 
@@ -260,7 +263,7 @@ if(yon==0){//YES
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CreateNewYear("D:/Shopy/Shopy/2023","20210628-20210630").setVisible(true);
+                new CreateNewYear("D:/Shopy/Shopy/2023", "20210628-20210630").setVisible(true);
             }
         });
     }
