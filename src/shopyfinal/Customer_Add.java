@@ -105,21 +105,6 @@ public class Customer_Add extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, label, "ERROR", JOptionPane.WARNING_MESSAGE);
             System.exit(1);
         }
-        if (lang.compareToIgnoreCase("English") != 0) {
-
-            hdlbl.setText("नये ग्राहक का खाता जोड़े ");
-            cdlbl.setText("कोड :");
-            enmlbl.setText("नाम(अंग्रेजी में) :");
-            hnmlbl.setText("नाम(हिन्दी में) :");
-            mnlbl.setText("मोबाईल न. :");
-            addlbl.setText("पता :");
-            blnclbl.setText("बैलन्स :");
-            caumsg.setText("कोड बाद मे कभी नहीं बदला जाएगा !");
-            caumsg1.setText("दिनांक बाद मे कभी नहीं बदली जाएगी !");
-            confirm.setText("कन्फर्म");
-            close.setText("बंद करे");
-
-        }
 
         Ename.setForeground(Color.pink);
         Hname.setForeground(Color.pink);
@@ -167,16 +152,17 @@ public class Customer_Add extends javax.swing.JFrame {
         setTitle("Create a New Customer Account");
 
         cdlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        cdlbl.setText("Code :");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Resources/label"); // NOI18N
+        cdlbl.setText(bundle.getString("CODE")); // NOI18N
 
         enmlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        enmlbl.setText("Name(in English) :");
+        enmlbl.setText(bundle.getString("NAME_EN")); // NOI18N
 
         mnlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        mnlbl.setText("Mobile No. :");
+        mnlbl.setText(bundle.getString("MOBILE_NO")); // NOI18N
 
         addlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        addlbl.setText("Address :");
+        addlbl.setText(bundle.getString("ADDRESS")); // NOI18N
 
         pcode.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         pcode.setText("0001");
@@ -252,7 +238,7 @@ public class Customer_Add extends javax.swing.JFrame {
         });
 
         confirm.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
-        confirm.setText("Confirm");
+        confirm.setText(bundle.getString("CONFIRM")); // NOI18N
         confirm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 confirmActionPerformed(evt);
@@ -265,7 +251,7 @@ public class Customer_Add extends javax.swing.JFrame {
         });
 
         close.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
-        close.setText("Close");
+        close.setText(bundle.getString("CLOSE")); // NOI18N
         close.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 closeActionPerformed(evt);
@@ -276,7 +262,7 @@ public class Customer_Add extends javax.swing.JFrame {
 
         hdlbl.setFont(new java.awt.Font("Monospaced", 1, 20)); // NOI18N
         hdlbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        hdlbl.setText("Adding a New Customer Account");
+        hdlbl.setText(bundle.getString("ADD_NEW_CUSTOMER")); // NOI18N
 
         pbal.setBackground(new java.awt.Color(255, 255, 0));
         pbal.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
@@ -300,10 +286,10 @@ public class Customer_Add extends javax.swing.JFrame {
         });
 
         blnclbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        blnclbl.setText("Balance :");
+        blnclbl.setText(bundle.getString("BALANCE")); // NOI18N
 
         hnmlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        hnmlbl.setText("Name(in Hindi) :");
+        hnmlbl.setText(bundle.getString("NAME_HI")); // NOI18N
 
         Hname.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
         Hname.setText("नाम");
@@ -342,7 +328,7 @@ public class Customer_Add extends javax.swing.JFrame {
             }
         });
 
-        caumsg.setText("Code can never be changed later !");
+        caumsg.setText(bundle.getString("CODE_NEVER_CHANGES")); // NOI18N
 
         caution1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Caut.png"))); // NOI18N
         caution1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -354,7 +340,7 @@ public class Customer_Add extends javax.swing.JFrame {
             }
         });
 
-        caumsg1.setText("Date can never be changed later !");
+        caumsg1.setText(bundle.getString("DATA_NEVER_CHANGES")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -382,7 +368,7 @@ public class Customer_Add extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGap(76, 76, 76)
+                                    .addContainerGap(74, Short.MAX_VALUE)
                                     .addComponent(enmlbl))
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addContainerGap()
@@ -402,8 +388,8 @@ public class Customer_Add extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(Ename, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(Hname, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 61, Short.MAX_VALUE)))
-                .addGap(81, 81, 81))
+                        .addGap(0, 59, Short.MAX_VALUE)))
+                .addContainerGap(78, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(caumsg1)

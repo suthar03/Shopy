@@ -8,6 +8,7 @@ package shopyfinal;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 

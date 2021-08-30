@@ -15,9 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -261,7 +259,7 @@ public class Password extends javax.swing.JFrame {
                 JLabel label = new JLabel("Original Pass Problem !! Error0004" + ex);
                 label.setFont(new Font("Arial", Font.BOLD, 18));
                 JOptionPane.showMessageDialog(null, label, "ERROR .. ", JOptionPane.ERROR_MESSAGE);
-                //errmessage.mainn("Original Pass Problem !! Error0004",400,200);
+
             }
 
             if (data.equals(tyr)) {
@@ -269,9 +267,7 @@ public class Password extends javax.swing.JFrame {
                 try {
                     ShortFunction.ReplaceLineWN(baseadd, "Cuser.txt", 2, userstr);
                 } catch (IOException ex) {
-                    //errmessage.mainn("Something is Wrong",400,200);
                     try {
-                        //PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(baseadd+"/userID.txt", true)));
                         PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(baseadd + "/Cuser.txt", true), "UTF-8"));
                         out.println("Nothing");
                         out.println(userstr);
@@ -280,8 +276,17 @@ public class Password extends javax.swing.JFrame {
                         JLabel label = new JLabel("Current User Not Update!!! " + p);
                         label.setFont(new Font("Arial", Font.BOLD, 18));
                         JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.ERROR_MESSAGE);
-                        //errmessage.mainn("User Not Added!!! Error0005", 400, 200);
+
                     }
+
+                }
+                //Language setup
+                try {
+                    String lang = ShortFunction.GetLine(baseadd + "/" + userstr + "/conf.txt", 1);
+                    if (lang.equalsIgnoreCase("English") == false) {
+                        Locale.setDefault(new Locale("en", "IN"));
+                    }
+                } catch (IOException ex) {
 
                 }
                 new MainMenu(baseadd, logo).setVisible(true);

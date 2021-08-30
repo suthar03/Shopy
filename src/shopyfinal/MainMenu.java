@@ -12,7 +12,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Paint;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -29,13 +28,12 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.PriorityQueue;
+import java.util.ResourceBundle;
 import java.util.Scanner;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -140,7 +138,7 @@ public class MainMenu extends javax.swing.JFrame {
                 System.exit(0);
             }
         } catch (IOException ex) {
-            JLabel label = new JLabel("Configuration Error !!! Error0003");
+            JLabel label = new JLabel(java.util.ResourceBundle.getBundle("Resources/label").getString("CONFIGURATION_ERROR"));
             label.setFont(new Font("Arial", Font.BOLD, 18));
             JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
@@ -153,7 +151,6 @@ public class MainMenu extends javax.swing.JFrame {
             dt_str = Eyear;
         }
         System.out.println(Syear + " : " + dt_str + " : " + Eyear);
-        langview();
         setupSelection();
         CMRorPRT_HighestPurchased.setSelectedIndex(1);
         BackendProcees();
@@ -377,68 +374,6 @@ public class MainMenu extends javax.swing.JFrame {
 
     public void setter() {
         this.setEnabled(true);
-    }
-
-    public void langview() {
-        if (lang.compareToIgnoreCase("English") != 0) {
-
-            //#
-            MMuser.setText(" युजर ");
-            uadd.setText("नया जोड़े");
-            ucp.setText("पासवर्ड बदले");
-            ued.setText("विवरण संपादित करें");
-            uremove.setText("उपयोगकर्ता निकालें");
-            //##
-            MMparty.setText(" पार्टी/विक्रेता ");
-            MPadd.setText("नया जोड़े");
-            MPlist.setText("सब की सूची");
-            MPcs.setText("वर्तमान स्थिति");
-            MPgiven.setText("लेन­देन");
-            MPedit.setText("प्रविष्टि(Entry) संपादित करें");
-            MPbilling.setText("बिलिंग");
-            MPeditAC.setText("खाता विवरण संपादित करें");
-            //###
-            MMcustomer.setText(" ग्राहक/क्रेता ");
-            MCadd.setText("नया जोड़े ");
-            MClist.setText("सब की सूची");
-            MCcs.setText("वर्तमान स्थिति");
-            MCgiven.setText("लेन­देन");
-            MCedit.setText("प्रविष्टि(Entry) संपादित करें");
-            MCbilling.setText("बिलिंग");
-            MCeditAC.setText("खाता विवरण संपादित करें");
-            //####
-            MMitem.setText(" आइटम ");
-            MIadd.setText("नई आइटम जोड़े");
-            MIlist.setText("सब की सूची");
-            MILorder.setText("प्राथमिकता क्रम");
-            MIShortage.setText("स्टॉक की कमी");
-            MIRecent.setText("हाल की दरें ");
-            MIedit.setText("विवरण संपादित करें");
-            //#####
-            MMstock.setText(" स्टॉक ");
-            MSod.setText("तारीख पर");
-            MSod2d.setText("तारीख से तारीख तक");
-            MSod2dwd.setText("विवरण के साथ दिनांक से तारीख तक");
-            MSOrdr.setText("ऑर्डर बुक");
-            //######
-            MMspsts.setText("दुकान की स्थिति");
-            MSPutd.setText("तारीख तक");
-            MSPbwd2d.setText("तारीख से तारीख तक");
-            MSPstock.setText("स्टॉक");
-            //#######
-            MMhelp.setText(" सहायता ");
-            MHcon.setText("संपर्क करें");
-            MHhtu.setText("उपयोग कैसे करे");
-            MHbackup.setText("बैकअप");
-            //#######
-            MMconf.setText(" प्रारूप "); //No hindi
-            MClang.setText("भाषा");
-            MCfinacial.setText("वित्तीय वर्ष");
-            ChangeYear.setText("वित्तीय वर्ष बदलें");
-            CreateYear.setText("वित्तीय वर्ष बनाएं");
-            MCmsg.setText("ग्रीटिंग मैसेज");
-            MCbkupd.setText("बैकअप सेटिंग");
-        }
     }
 
     public void iconer() {
@@ -924,7 +859,8 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt1.setText("Add New Customer");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Resources/label"); // NOI18N
+        edt1.setText(bundle.getString("ADD_NEW_CUSTOMER")); // NOI18N
         edt1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt1.addAncestorListener(new javax.swing.event.AncestorListener() {
@@ -945,7 +881,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt2.setText("Transaction");
+        edt2.setText(bundle.getString("TRANSACTION")); // NOI18N
         edt2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -957,7 +893,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt3.setText("Billing");
+        edt3.setText(bundle.getString("BILLING")); // NOI18N
         edt3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt3.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -969,7 +905,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt4.setText("Edit Entries");
+        edt4.setText(bundle.getString("EDIT_ENTRY")); // NOI18N
         edt4.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -981,7 +917,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt5.setText("List All");
+        edt5.setText(bundle.getString("LIST_ALL")); // NOI18N
         edt5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -993,7 +929,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt6.setText("Item Shortage");
+        edt6.setText(bundle.getString("ITEM_SHORTAGE")); // NOI18N
         edt6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt6.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1005,7 +941,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt7.setText("Exit");
+        edt7.setText(bundle.getString("EXIT")); // NOI18N
         edt7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt7.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1027,7 +963,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         lbl_Market.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         lbl_Market.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_Market.setText("Selling and purchased");
+        lbl_Market.setText(bundle.getString("SELLING_PURCHASING")); // NOI18N
         lbl_Market.setAlignmentX(0.5F);
         lbl_Market.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         MarketTrend.add(lbl_Market);
@@ -1061,7 +997,7 @@ public class MainMenu extends javax.swing.JFrame {
         month_Market.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
         pnl_functionMarket.add(month_Market);
 
-        refresh_Market.setText("Refresh");
+        refresh_Market.setText(bundle.getString("REFRESH")); // NOI18N
         refresh_Market.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refresh_MarketActionPerformed(evt);
@@ -1094,7 +1030,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         lbl_Market1.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         lbl_Market1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_Market1.setText("Order Booking");
+        lbl_Market1.setText(bundle.getString("ORDER_BOOKING")); // NOI18N
         lbl_Market1.setAlignmentX(0.5F);
         lbl_Market1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BookOrders.add(lbl_Market1);
@@ -1122,7 +1058,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(176, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Book New Orders", pnl_BookNewOrder);
+        jTabbedPane1.addTab(bundle.getString("BOOK_NEW_ORDER"), pnl_BookNewOrder); // NOI18N
         pnl_BookNewOrder.getAccessibleContext().setAccessibleName("NewOrderTab");
 
         jLabel2.setText("View Pending Orders");
@@ -1144,7 +1080,7 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(167, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("View Pending Orders", pnl_ViewOrders);
+        jTabbedPane1.addTab(bundle.getString("VIEW_PENDING_ORDERS"), pnl_ViewOrders); // NOI18N
         pnl_ViewOrders.getAccessibleContext().setAccessibleName("ViewOrderTab");
 
         BookOrders.add(jTabbedPane1);
@@ -1170,7 +1106,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         lbl_HighestSold.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         lbl_HighestSold.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_HighestSold.setText("Consumers bought the most");
+        lbl_HighestSold.setText(bundle.getString("CONSUMER_BOUGHT_THE_MOST")); // NOI18N
         lbl_HighestSold.setAlignmentX(0.5F);
         lbl_HighestSold.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BestBuyer.add(lbl_HighestSold);
@@ -1197,7 +1133,7 @@ public class MainMenu extends javax.swing.JFrame {
         month_HighestSold.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
         pnl_function.add(month_HighestSold);
 
-        refresh_HighestSold.setText("Refresh");
+        refresh_HighestSold.setText(bundle.getString("REFRESH")); // NOI18N
         refresh_HighestSold.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refresh_HighestSoldActionPerformed(evt);
@@ -1267,7 +1203,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         lbl_HighestPurchased.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         lbl_HighestPurchased.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbl_HighestPurchased.setText("Most bought from these suppliers");
+        lbl_HighestPurchased.setText(bundle.getString("MOST_BOUGHT_FROM_SUPPLIER")); // NOI18N
         lbl_HighestPurchased.setAlignmentX(0.5F);
         lbl_HighestPurchased.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         BestPurchased.add(lbl_HighestPurchased);
@@ -1294,7 +1230,7 @@ public class MainMenu extends javax.swing.JFrame {
         month_HighestPurchased.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
         pnl_function1.add(month_HighestPurchased);
 
-        refresh_HighestPurchased.setText("Refresh");
+        refresh_HighestPurchased.setText(bundle.getString("REFRESH")); // NOI18N
         refresh_HighestPurchased.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 refresh_HighestPurchasedActionPerformed(evt);
@@ -1366,7 +1302,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt21.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt21.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt21.setText("Add New Party");
+        edt21.setText(bundle.getString("ADD_NEW_SUPPLIER")); // NOI18N
         edt21.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt21.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt21.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1378,7 +1314,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt22.setText("Transaction");
+        edt22.setText(bundle.getString("TRANSACTION")); // NOI18N
         edt22.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt22.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt22.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1390,7 +1326,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt23.setText("Billing");
+        edt23.setText(bundle.getString("BILLING")); // NOI18N
         edt23.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt23.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt23.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1402,7 +1338,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt24.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt24.setText("Edit Entries");
+        edt24.setText(bundle.getString("EDIT_ENTRY")); // NOI18N
         edt24.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt24.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt24.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1414,7 +1350,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt25.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt25.setText("List All");
+        edt25.setText(bundle.getString("LIST_ALL")); // NOI18N
         edt25.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt25.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt25.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1426,7 +1362,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt26.setText("Stock with discription");
+        edt26.setText(bundle.getString("STOCK_WITH_DESCRIPTION")); // NOI18N
         edt26.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt26.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt26.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1438,7 +1374,7 @@ public class MainMenu extends javax.swing.JFrame {
 
         edt27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         edt27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icons/Dumy.png"))); // NOI18N
-        edt27.setText("Exit");
+        edt27.setText(bundle.getString("EXIT")); // NOI18N
         edt27.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         edt27.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         edt27.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1459,11 +1395,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
-        MMuser.setText(" User ");
+        MMuser.setText(bundle.getString("USER")); // NOI18N
         MMuser.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         uadd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        uadd.setText("Add New");
+        uadd.setText(bundle.getString("ADD_NEW")); // NOI18N
         uadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 uaddActionPerformed(evt);
@@ -1472,7 +1408,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMuser.add(uadd);
 
         ucp.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        ucp.setText("Change Password");
+        ucp.setText(bundle.getString("CHANGE_PASSWORD")); // NOI18N
         ucp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ucpActionPerformed(evt);
@@ -1481,7 +1417,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMuser.add(ucp);
 
         ued.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        ued.setText("Edit Details");
+        ued.setText(bundle.getString("EDIT_DETAILS")); // NOI18N
         ued.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 uedActionPerformed(evt);
@@ -1490,7 +1426,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMuser.add(ued);
 
         uremove.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        uremove.setText("Remove User");
+        uremove.setText(bundle.getString("REMOVE_USER")); // NOI18N
         uremove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 uremoveActionPerformed(evt);
@@ -1500,11 +1436,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMuser);
 
-        MMparty.setText(" Supply ");
+        MMparty.setText(bundle.getString("SUPPLY")); // NOI18N
         MMparty.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         MPadd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPadd.setText("Add New Supplier");
+        MPadd.setText(bundle.getString("ADD_NEW_SUPPLIER")); // NOI18N
         MPadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPaddActionPerformed(evt);
@@ -1513,7 +1449,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMparty.add(MPadd);
 
         MPlist.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPlist.setText("List All");
+        MPlist.setText(bundle.getString("LIST_ALL")); // NOI18N
         MPlist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPlistActionPerformed(evt);
@@ -1522,7 +1458,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMparty.add(MPlist);
 
         MPcs.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPcs.setText("Current Status");
+        MPcs.setText(bundle.getString("CURRENT_STATUS")); // NOI18N
         MPcs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPcsActionPerformed(evt);
@@ -1531,7 +1467,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMparty.add(MPcs);
 
         MPgiven.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPgiven.setText("Transaction");
+        MPgiven.setText(bundle.getString("TRANSACTION")); // NOI18N
         MPgiven.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPgivenActionPerformed(evt);
@@ -1540,7 +1476,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMparty.add(MPgiven);
 
         MPedit.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPedit.setText("Edit Entry");
+        MPedit.setText(bundle.getString("EDIT_ENTRY")); // NOI18N
         MPedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPeditActionPerformed(evt);
@@ -1549,7 +1485,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMparty.add(MPedit);
 
         MPbilling.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPbilling.setText("Billing");
+        MPbilling.setText(bundle.getString("BILLING")); // NOI18N
         MPbilling.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPbillingActionPerformed(evt);
@@ -1558,7 +1494,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMparty.add(MPbilling);
 
         MPeditAC.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MPeditAC.setText("Edit A/C Details");
+        MPeditAC.setText(bundle.getString("EDIT_AC_DETAILS")); // NOI18N
         MPeditAC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MPeditACActionPerformed(evt);
@@ -1568,12 +1504,12 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMparty);
 
-        MMcustomer.setText(" Consumption ");
+        MMcustomer.setText(bundle.getString("CONSUMPTION")); // NOI18N
         MMcustomer.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         MMcustomer.setHideActionText(true);
 
         MCadd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCadd.setText("Add New Customer");
+        MCadd.setText(bundle.getString("ADD_NEW_CUSTOMER")); // NOI18N
         MCadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCaddActionPerformed(evt);
@@ -1582,7 +1518,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMcustomer.add(MCadd);
 
         MClist.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MClist.setText("List All");
+        MClist.setText(bundle.getString("LIST_ALL")); // NOI18N
         MClist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MClistActionPerformed(evt);
@@ -1591,7 +1527,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMcustomer.add(MClist);
 
         MCcs.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCcs.setText("Current Status");
+        MCcs.setText(bundle.getString("CURRENT_STATUS")); // NOI18N
         MCcs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCcsActionPerformed(evt);
@@ -1600,7 +1536,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMcustomer.add(MCcs);
 
         MCgiven.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCgiven.setText("Transaction");
+        MCgiven.setText(bundle.getString("TRANSACTION")); // NOI18N
         MCgiven.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCgivenActionPerformed(evt);
@@ -1609,7 +1545,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMcustomer.add(MCgiven);
 
         MCedit.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCedit.setText("Edit Entry");
+        MCedit.setText(bundle.getString("EDIT_ENTRY")); // NOI18N
         MCedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCeditActionPerformed(evt);
@@ -1618,7 +1554,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMcustomer.add(MCedit);
 
         MCbilling.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCbilling.setText("Billing");
+        MCbilling.setText(bundle.getString("BILLING")); // NOI18N
         MCbilling.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCbillingActionPerformed(evt);
@@ -1627,7 +1563,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMcustomer.add(MCbilling);
 
         MCeditAC.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCeditAC.setText("Edit A/C Details");
+        MCeditAC.setText(bundle.getString("EDIT_AC_DETAILS")); // NOI18N
         MCeditAC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCeditACActionPerformed(evt);
@@ -1637,11 +1573,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMcustomer);
 
-        MMitem.setText(" Item ");
+        MMitem.setText(bundle.getString("ITEM")); // NOI18N
         MMitem.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         MIadd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MIadd.setText("Add New");
+        MIadd.setText(bundle.getString("ADD_NEW_ITEM")); // NOI18N
         MIadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MIaddActionPerformed(evt);
@@ -1650,7 +1586,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMitem.add(MIadd);
 
         MIlist.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MIlist.setText("List All");
+        MIlist.setText(bundle.getString("LIST_ALL")); // NOI18N
         MIlist.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MIlistActionPerformed(evt);
@@ -1659,7 +1595,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMitem.add(MIlist);
 
         MILorder.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MILorder.setText("Priority Ordering");
+        MILorder.setText(bundle.getString("PRIORITY_ORDERING")); // NOI18N
         MILorder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MILorderActionPerformed(evt);
@@ -1668,7 +1604,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMitem.add(MILorder);
 
         MIShortage.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MIShortage.setText("Shortage");
+        MIShortage.setText(bundle.getString("SHORTAGE")); // NOI18N
         MIShortage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MIShortageActionPerformed(evt);
@@ -1677,7 +1613,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMitem.add(MIShortage);
 
         MIRecent.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MIRecent.setText("Recent Rates");
+        MIRecent.setText(bundle.getString("RECENT_RATES")); // NOI18N
         MIRecent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MIRecentActionPerformed(evt);
@@ -1686,7 +1622,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMitem.add(MIRecent);
 
         MIedit.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MIedit.setText("Edit Details");
+        MIedit.setText(bundle.getString("EDIT_DETAILS")); // NOI18N
         MIedit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MIeditActionPerformed(evt);
@@ -1696,11 +1632,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMitem);
 
-        MMstock.setText(" Stock ");
+        MMstock.setText(bundle.getString("STOCK")); // NOI18N
         MMstock.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         MSod.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSod.setText("On Date");
+        MSod.setText(bundle.getString("ON_DATE")); // NOI18N
         MSod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSodActionPerformed(evt);
@@ -1709,7 +1645,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMstock.add(MSod);
 
         MSod2d.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSod2d.setText("On Date2Date");
+        MSod2d.setText(bundle.getString("ON_DATE2DATE")); // NOI18N
         MSod2d.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSod2dActionPerformed(evt);
@@ -1718,7 +1654,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMstock.add(MSod2d);
 
         MSod2dwd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSod2dwd.setText("On Date2Date WD");
+        MSod2dwd.setText(bundle.getString("ON_DATE2DATE_WD")); // NOI18N
         MSod2dwd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSod2dwdActionPerformed(evt);
@@ -1727,7 +1663,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMstock.add(MSod2dwd);
 
         MSOrdr.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSOrdr.setText("Order Book");
+        MSOrdr.setText(bundle.getString("ORDER_BOOK")); // NOI18N
         MSOrdr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSOrdrActionPerformed(evt);
@@ -1737,11 +1673,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMstock);
 
-        MMspsts.setText(" Shop_Status ");
+        MMspsts.setText(bundle.getString("SHOP_STATUS")); // NOI18N
         MMspsts.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         MSPutd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSPutd.setText("Up to Date");
+        MSPutd.setText(bundle.getString("UP_TO_DATE")); // NOI18N
         MSPutd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSPutdActionPerformed(evt);
@@ -1750,7 +1686,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMspsts.add(MSPutd);
 
         MSPbwd2d.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSPbwd2d.setText("Between Dates");
+        MSPbwd2d.setText(bundle.getString("BETWEEN_DATES")); // NOI18N
         MSPbwd2d.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSPbwd2dActionPerformed(evt);
@@ -1759,7 +1695,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMspsts.add(MSPbwd2d);
 
         MSPstock.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MSPstock.setText("Stock");
+        MSPstock.setText(bundle.getString("STOCK")); // NOI18N
         MSPstock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MSPstockActionPerformed(evt);
@@ -1769,11 +1705,11 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMspsts);
 
-        MMconf.setText(" Configure ");
+        MMconf.setText(bundle.getString("CONFIGURATION")); // NOI18N
         MMconf.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         MClang.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MClang.setText("Language");
+        MClang.setText(bundle.getString("LANGUAGE")); // NOI18N
         MClang.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MClangActionPerformed(evt);
@@ -1781,11 +1717,11 @@ public class MainMenu extends javax.swing.JFrame {
         });
         MMconf.add(MClang);
 
-        MCfinacial.setText("Financial  Year");
+        MCfinacial.setText(bundle.getString("FINANCIAL_YEAR")); // NOI18N
         MCfinacial.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
 
         ChangeYear.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        ChangeYear.setText("Change Finacial Year");
+        ChangeYear.setText(bundle.getString("CHANGE_FY")); // NOI18N
         ChangeYear.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 ChangeYearFocusLost(evt);
@@ -1799,7 +1735,7 @@ public class MainMenu extends javax.swing.JFrame {
         MCfinacial.add(ChangeYear);
 
         CreateYear.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        CreateYear.setText("Create New Year");
+        CreateYear.setText(bundle.getString("CREATE_NEW_FY")); // NOI18N
         CreateYear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CreateYearActionPerformed(evt);
@@ -1810,7 +1746,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMconf.add(MCfinacial);
 
         MCmsg.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCmsg.setText("Greeting Message");
+        MCmsg.setText(bundle.getString("GREETING_MESSAGE")); // NOI18N
         MCmsg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCmsgActionPerformed(evt);
@@ -1819,7 +1755,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMconf.add(MCmsg);
 
         MCbkupd.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MCbkupd.setText("Backup Setting");
+        MCbkupd.setText(bundle.getString("BACKUP_SETTING")); // NOI18N
         MCbkupd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MCbkupdActionPerformed(evt);
@@ -1829,33 +1765,33 @@ public class MainMenu extends javax.swing.JFrame {
 
         Menu.add(MMconf);
 
-        MManalysis.setText(" Analysis");
+        MManalysis.setText(bundle.getString("ANALYSIS")); // NOI18N
         MManalysis.setActionCommand(" Analysis ");
         MManalysis.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         jMenuItem1.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        jMenuItem1.setText("Market Analysis");
+        jMenuItem1.setText(bundle.getString("MARKET_ANALYSIS")); // NOI18N
         MManalysis.add(jMenuItem1);
 
         jMenuItem3.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        jMenuItem3.setText("Stock Analysis");
+        jMenuItem3.setText(bundle.getString("STOCK_ANALYSIS")); // NOI18N
         MManalysis.add(jMenuItem3);
 
         jMenuItem2.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        jMenuItem2.setText("Best and Worst");
+        jMenuItem2.setText(bundle.getString("BEST_WORST")); // NOI18N
         MManalysis.add(jMenuItem2);
 
         jMenuItem4.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        jMenuItem4.setText("Market Trade");
+        jMenuItem4.setText(bundle.getString("MARKET_TRAND")); // NOI18N
         MManalysis.add(jMenuItem4);
 
         Menu.add(MManalysis);
 
-        MMhelp.setText(" Help ");
+        MMhelp.setText(bundle.getString("HELP")); // NOI18N
         MMhelp.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
 
         MHcon.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MHcon.setText("Contact");
+        MHcon.setText(bundle.getString("CONTACT")); // NOI18N
         MHcon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MHconActionPerformed(evt);
@@ -1864,7 +1800,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMhelp.add(MHcon);
 
         MHhtu.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MHhtu.setText("How To Use");
+        MHhtu.setText(bundle.getString("HOW_TO_USE")); // NOI18N
         MHhtu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MHhtuActionPerformed(evt);
@@ -1873,7 +1809,7 @@ public class MainMenu extends javax.swing.JFrame {
         MMhelp.add(MHhtu);
 
         MHbackup.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
-        MHbackup.setText("BAckUp");
+        MHbackup.setText(bundle.getString("BACKUP")); // NOI18N
         MHbackup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MHbackupActionPerformed(evt);
@@ -2272,10 +2208,12 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void refresh_HighestSoldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_HighestSoldActionPerformed
         dataloaderHighestSold();
+        Locale locale = Locale.getDefault();
+        ResourceBundle resource = ResourceBundle.getBundle("Resources/label", locale);
         if (CMRorPRT_HighestSold.getSelectedIndex() == 0) {
-            lbl_HighestSold.setText("These consumers bought the most");
+            lbl_HighestSold.setText(resource.getString("CONSUMER_BOUGHT_THE_MOST"));
         } else {
-            lbl_HighestSold.setText("These suppliers were paid the most");
+            lbl_HighestSold.setText(resource.getString("MOST_PAID_SUPPLIER"));
         }
     }//GEN-LAST:event_refresh_HighestSoldActionPerformed
 
@@ -2291,10 +2229,12 @@ public class MainMenu extends javax.swing.JFrame {
 
     private void refresh_HighestPurchasedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refresh_HighestPurchasedActionPerformed
         dataloaderHighestPurchased();
+        Locale locale = Locale.getDefault();
+        ResourceBundle resource = ResourceBundle.getBundle("Resources/label", locale);
         if (CMRorPRT_HighestPurchased.getSelectedIndex() == 0) {
-            lbl_HighestPurchased.setText("These consumers paid the most");
+            lbl_HighestPurchased.setText(resource.getString("CONSUMER_PAID_THE_MOST"));
         } else {
-            lbl_HighestPurchased.setText("Most bought from these suppliers");
+            lbl_HighestPurchased.setText(resource.getString("MOST_BOUGHT_FROM_SUPPLIER"));
         }
     }//GEN-LAST:event_refresh_HighestPurchasedActionPerformed
 
@@ -2313,22 +2253,25 @@ public class MainMenu extends javax.swing.JFrame {
         String title = "Someone", X_lbl = "Day of month", Y_lbl = "Amount";
         ChartPanel barpanel;
         JFreeChart barChart;
+        
+        Locale locale = Locale.getDefault();
+        ResourceBundle resource = ResourceBundle.getBundle("Resources/label", locale);
         if (SellorPurchased_Market.getSelectedIndex() == 0) {//Sell
-            title = "Sell Analysis";
+            title = resource.getString("SELL_ANALYSIS");
             barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_sold, PlotOrientation.VERTICAL, false, true, false);
             CategoryPlot barchrt = barChart.getCategoryPlot();
             barchrt.setBackgroundPaint(null);
             barchrt.setRangeGridlinePaint(Color.BLUE);
             barpanel = new ChartPanel(barChart);
         } else if (SellorPurchased_Market.getSelectedIndex() == 1) {//purchased
-            title = "Purchase Analysis";
+            title = resource.getString("PURCHASE_ANALYSIS");
             barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_purchased, PlotOrientation.VERTICAL, false, true, false);
             CategoryPlot barchrt = barChart.getCategoryPlot();
             barchrt.setBackgroundPaint(null);
             barchrt.setRangeGridlinePaint(Color.BLUE);
             barpanel = new ChartPanel(barChart);
         } else {//both combined
-            title = "Sell and Purchase Analysis";
+            title = resource.getString("SELLING_AND_PURCHASING");
             barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_bothCombined, PlotOrientation.VERTICAL, true, true, false);
             CategoryPlot barchrt = barChart.getCategoryPlot();
             barchrt.setBackgroundPaint(null);
@@ -2345,22 +2288,25 @@ public class MainMenu extends javax.swing.JFrame {
         String title = "Someone", X_lbl = "Day of month", Y_lbl = "Amount";
         ChartPanel barpanel;
         JFreeChart barChart;
+        
+        Locale locale = Locale.getDefault();
+        ResourceBundle resource = ResourceBundle.getBundle("Resources/label", locale);
         if (SellorPurchased_Market.getSelectedIndex() == 0) {//Sell
-            title = "Sell Analysis";
+            title = resource.getString("SELL_ANALYSIS");
             barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_sold, PlotOrientation.VERTICAL, false, true, false);
             CategoryPlot barchrt = barChart.getCategoryPlot();
             barchrt.setBackgroundPaint(null);
             barchrt.setRangeGridlinePaint(Color.BLUE);
             barpanel = new ChartPanel(barChart);
         } else if (SellorPurchased_Market.getSelectedIndex() == 1) {//purchased
-            title = "Purchase Analysis";
+            title = resource.getString("PURCHASE_ANALYSIS");
             barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_purchased, PlotOrientation.VERTICAL, false, true, false);
             CategoryPlot barchrt = barChart.getCategoryPlot();
             barchrt.setBackgroundPaint(null);
             barchrt.setRangeGridlinePaint(Color.BLUE);
             barpanel = new ChartPanel(barChart);
         } else {//both combined
-            title = "Sell and Purchase Analysis";
+            title = resource.getString("SELLING_AND_PURCHASING");
             barChart = ChartFactory.createLineChart(title, X_lbl, Y_lbl, dataset_bothCombined, PlotOrientation.VERTICAL, true, true, false);
             CategoryPlot barchrt = barChart.getCategoryPlot();
             barchrt.setBackgroundPaint(null);

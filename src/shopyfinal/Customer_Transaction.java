@@ -152,22 +152,7 @@ public class Customer_Transaction extends javax.swing.JFrame {
             Sname = HSname;
             blbl = " बाकी";
             jlbl = " जमा";
-            hdlbl.setText("ग्राहक लेन-देन मेन्यू");
-            ccdlbl.setText("कोड :");
-            cnmlbl.setText("नाम :");
-            icdlbl.setText("आइटम कोड :");
-            inmlbl.setText("आइटम नाम :");
-            irtlbl.setText("रेट :");
-            iqtylbl.setText("मात्रा :");
-            iamtlbl.setText("रकम :");
-            tbllbl.setText("   Added आइटम लिस्टिड Below");
-            add.setText("जोड़े");
-            mdlbl.setText("मोड :");
-            waylbl.setText("way :");
-            remlbl.setText("रेमार्क :");
-            cslbl.setText("वर्तमान स्थिति :");
             dtlbl = "दिनांक :";
-            tamtlbl.setText("टोटल रकम :");
             sway.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"बेचा", "खरीदा"}));
         } else {
             Sname = ESname;
@@ -2033,7 +2018,8 @@ public class Customer_Transaction extends javax.swing.JFrame {
         hdlbl.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
         hdlbl.setForeground(new java.awt.Color(255, 255, 255));
         hdlbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        hdlbl.setText("!! CONSUMER TRASACTION MENU  !!");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Resources/label"); // NOI18N
+        hdlbl.setText(bundle.getString("CONSUMER_TRASACTION_MENU")); // NOI18N
 
         javax.swing.GroupLayout title_centredLayout = new javax.swing.GroupLayout(title_centred);
         title_centred.setLayout(title_centredLayout);
@@ -2120,7 +2106,7 @@ public class Customer_Transaction extends javax.swing.JFrame {
         });
 
         tbllbl.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
-        tbllbl.setText("  Added items are below ");
+        tbllbl.setText(bundle.getString("ADDED_ITEMS_ARE_BELOW")); // NOI18N
         tbllbl.setRequestFocusEnabled(false);
 
         code.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
@@ -2191,7 +2177,7 @@ public class Customer_Transaction extends javax.swing.JFrame {
 
         iamtlbl.setFont(new java.awt.Font("Monospaced", 1, 12)); // NOI18N
         iamtlbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        iamtlbl.setText("Amount:");
+        iamtlbl.setText(bundle.getString("AMOUNT")); // NOI18N
 
         iname.setFont(new java.awt.Font("Monospaced", 1, 36)); // NOI18N
         iname.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -2257,7 +2243,7 @@ public class Customer_Transaction extends javax.swing.JFrame {
         });
 
         add.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
-        add.setText("Add");
+        add.setText(bundle.getString("ADD")); // NOI18N
         add.setMaximumSize(new java.awt.Dimension(100, 41));
         add.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -2293,24 +2279,24 @@ public class Customer_Transaction extends javax.swing.JFrame {
 
         iqtylbl.setFont(new java.awt.Font("Monospaced", 1, 12)); // NOI18N
         iqtylbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        iqtylbl.setText("Quantity :");
+        iqtylbl.setText(bundle.getString("QUATITY")); // NOI18N
 
         irtlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         irtlbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        irtlbl.setText("Rate :");
+        irtlbl.setText(bundle.getString("RATE")); // NOI18N
 
         inmlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        inmlbl.setText("Item Name :");
+        inmlbl.setText(bundle.getString("ITEM_NAME")); // NOI18N
 
         icdlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        icdlbl.setText("Item Code :");
+        icdlbl.setText(bundle.getString("ITEM_CODE")); // NOI18N
 
         cnmlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        cnmlbl.setText("Name :");
+        cnmlbl.setText(bundle.getString("NAME")); // NOI18N
 
         ccdlbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         ccdlbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        ccdlbl.setText("Code :");
+        ccdlbl.setText(bundle.getString("CODE")); // NOI18N
 
         table.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
         table.setModel(new javax.swing.table.DefaultTableModel(
@@ -2359,7 +2345,7 @@ public class Customer_Transaction extends javax.swing.JFrame {
         });
 
         mdlbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        mdlbl.setText("Mode :");
+        mdlbl.setText(bundle.getString("MODE")); // NOI18N
 
         SCP.setViewportBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         SCP.setEnabled(false);
@@ -2385,8 +2371,8 @@ public class Customer_Transaction extends javax.swing.JFrame {
         });
         SCP.setViewportView(newtb);
 
-        button1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        button1.setLabel("Setting");
+        button1.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        button1.setLabel(bundle.getString("SETTING")); // NOI18N
         button1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 button1FocusLost(evt);
@@ -2424,7 +2410,7 @@ public class Customer_Transaction extends javax.swing.JFrame {
 
         waylbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
         waylbl.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        waylbl.setText("Way :");
+        waylbl.setText(bundle.getString("WAY")); // NOI18N
 
         sway.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
         sway.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Becha", "Kharida" }));
@@ -2435,13 +2421,13 @@ public class Customer_Transaction extends javax.swing.JFrame {
         });
 
         remlbl.setFont(new java.awt.Font("Monospaced", 1, 13)); // NOI18N
-        remlbl.setText("Remark:");
+        remlbl.setText(bundle.getString("REMARK")); // NOI18N
 
         cslbl.setFont(new java.awt.Font("Monospaced", 1, 14)); // NOI18N
-        cslbl.setText("CStatus :");
+        cslbl.setText(bundle.getString("CSTATUS")); // NOI18N
 
         tamtlbl.setFont(new java.awt.Font("Monospaced", 1, 15)); // NOI18N
-        tamtlbl.setText("Total Amount :");
+        tamtlbl.setText(bundle.getString("TOTAL_AMOUNT")); // NOI18N
 
         cnsts.setEditable(false);
         cnsts.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -2457,8 +2443,8 @@ public class Customer_Transaction extends javax.swing.JFrame {
             }
         });
 
-        Bcloser.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        Bcloser.setText("Close");
+        Bcloser.setFont(new java.awt.Font("Monospaced", 1, 28)); // NOI18N
+        Bcloser.setText(bundle.getString("CLOSE")); // NOI18N
         Bcloser.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 BcloserFocusGained(evt);
@@ -2481,8 +2467,8 @@ public class Customer_Transaction extends javax.swing.JFrame {
             }
         });
 
-        Bcompleted.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        Bcompleted.setText("Complete");
+        Bcompleted.setFont(new java.awt.Font("Monospaced", 1, 28)); // NOI18N
+        Bcompleted.setText(bundle.getString("COMPLETE")); // NOI18N
         Bcompleted.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 BcompletedFocusGained(evt);
@@ -2510,8 +2496,8 @@ public class Customer_Transaction extends javax.swing.JFrame {
             }
         });
 
-        Bclear.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        Bclear.setText("Clear");
+        Bclear.setFont(new java.awt.Font("Monospaced", 1, 28)); // NOI18N
+        Bclear.setText(bundle.getString("CLEAR")); // NOI18N
         Bclear.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 BclearFocusGained(evt);
@@ -2566,11 +2552,11 @@ public class Customer_Transaction extends javax.swing.JFrame {
                         .addGap(116, 116, 116)
                         .addComponent(SCP, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(457, 457, 457)
-                        .addComponent(Bcloser, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                        .addComponent(Bcloser, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                         .addGap(52, 52, 52)
-                        .addComponent(Bclear, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                        .addComponent(Bclear, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                         .addGap(34, 34, 34)
-                        .addComponent(Bcompleted, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
+                        .addComponent(Bcompleted, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addComponent(jScrollPane1)))
@@ -2580,13 +2566,12 @@ public class Customer_Transaction extends javax.swing.JFrame {
                     .addComponent(tbllbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(43, 43, 43)
-                                .addComponent(icdlbl))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(ccdlbl, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(irtlbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(43, 43, 43)
+                                    .addComponent(icdlbl))
+                                .addComponent(irtlbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ccdlbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(icode)

@@ -86,24 +86,6 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.WARNING_MESSAGE);
         }
 
-        if (lang.compareToIgnoreCase("English") != 0) {
-
-            hdlbl.setText("ग्राहक के खाता का विवरण सम्पादन ");
-            cdlbl.setText("कोड :");
-            Bgo.setText("आगे जाए");
-            hdlbl2.setText("नई विवरण की प्रविष्टी");
-            Enmlbl.setText("नाम(अंग्रेजी में) :");
-            Hnmlbl.setText("नाम(हिन्दी में) :");
-            mbllbl.setText("मोबाईल नं. :");
-            addlbl.setText("पता :");
-            ballbl.setText("शुरुआती बैलन्स :");
-            dtlbl.setText("जोड़ने की दिनाँक :");
-            Bcancel.setText("रद्द करे");
-            Bsave.setText("सेव");
-            Bclose.setText("बंद");
-
-        }
-
         //info.setText(null);
         Date datee = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -175,16 +157,17 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         setTitle("Editing Details of Customer");
 
         cdlbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        cdlbl.setText("Code :");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("Resources/label"); // NOI18N
+        cdlbl.setText(bundle.getString("CODE")); // NOI18N
 
         Enmlbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        Enmlbl.setText("  Name(in English) :");
+        Enmlbl.setText(bundle.getString("NAME_EN")); // NOI18N
 
         mbllbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        mbllbl.setText("Mobile No. :");
+        mbllbl.setText(bundle.getString("MOBILE_NO")); // NOI18N
 
         addlbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        addlbl.setText("Address :");
+        addlbl.setText(bundle.getString("ADDRESS")); // NOI18N
 
         pcode.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         pcode.setText("0001");
@@ -275,7 +258,7 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         });
 
         Bgo.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
-        Bgo.setText("Go");
+        Bgo.setText(bundle.getString("GO")); // NOI18N
         Bgo.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 BgoFocusGained(evt);
@@ -296,7 +279,7 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         });
 
         Bsave.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
-        Bsave.setText("Save");
+        Bsave.setText(bundle.getString("SAVE")); // NOI18N
         Bsave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BsaveActionPerformed(evt);
@@ -309,7 +292,7 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         });
 
         Bclose.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
-        Bclose.setText("Close");
+        Bclose.setText(bundle.getString("CLOSE")); // NOI18N
         Bclose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BcloseActionPerformed(evt);
@@ -325,10 +308,10 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         hdlbl.setFont(new java.awt.Font("Monospaced", 1, 18)); // NOI18N
         hdlbl.setForeground(new java.awt.Color(0, 240, 0));
         hdlbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        hdlbl.setText("Editing Details Of Existing Customer Account");
+        hdlbl.setText(bundle.getString("EDIT_CUSTOMER_AC")); // NOI18N
 
         dtlbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        dtlbl.setText("Date of Addition :");
+        dtlbl.setText(bundle.getString("DATE_ADDITION")); // NOI18N
 
         ibal.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         ibal.setText("00.0");
@@ -355,7 +338,7 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         });
 
         ballbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        ballbl.setText("Initial Balance :");
+        ballbl.setText(bundle.getString("BALANCE")); // NOI18N
 
         dt.setEditable(false);
         dt.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -386,7 +369,7 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         hdlbl2.setFont(new java.awt.Font("Monospaced", 3, 18)); // NOI18N
         hdlbl2.setForeground(new java.awt.Color(240, 0, 0));
         hdlbl2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        hdlbl2.setText("-:: Enter New Details ::-");
+        hdlbl2.setText(bundle.getString("ENTER_NEW_DETAILS")); // NOI18N
 
         Hname.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
         Hname.setText("कोई नाम नहीं");
@@ -413,10 +396,10 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
         });
 
         Hnmlbl.setFont(new java.awt.Font("Monospaced", 1, 16)); // NOI18N
-        Hnmlbl.setText("  Name(in Hindi) :");
+        Hnmlbl.setText(bundle.getString("NAME_HI")); // NOI18N
 
         Bcancel.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
-        Bcancel.setText("Cancel");
+        Bcancel.setText(bundle.getString("CANCEL")); // NOI18N
         Bcancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BcancelActionPerformed(evt);
@@ -453,7 +436,7 @@ public class Customer_AC_EDT extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(pmob)
-                                    .addComponent(hdlbl2, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+                                    .addComponent(hdlbl2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(Ename, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(Hname)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
