@@ -11,17 +11,14 @@ Developed a customized application for shop management. Motivation behind this a
     • Graphical analysis of consumer, supplier, and shop
     • Easy to use and understand
     • Track of stock, consumer, and supplier status
-    • Keep track of stock
     • Prints bills/mini slip    
     • Keeps the track of user account status
-    • Generate order list for shop automatically    
+    • Automatically generate product order list (stock less than minimum required) for the shop
     • How is the profit in any intervals?
     • How is customer status while a period?
     • Book Orders in advanced
     • Available for both Hindi and English language
-    • Available for both Hindi and English language    
-    • Available for both Hindi and English language
-
+    
 
 
 # Working Demo
@@ -100,11 +97,11 @@ Developed a customized application for shop management. Motivation behind this a
     • Graphical analysis of demand and trade in product markets
     • SQL database
     • Role-based access control
-         o	Like employee and owner have difference level of access and modification
+         o Like employee and owner have difference level of access and modification
     • Remote database storage
-    •	Spring frame work
+    • Spring frame work
     • Pair with android application
-    •	Consumer order booking menu
+    • Consumer order booking
 
 ## Implimentation
 
