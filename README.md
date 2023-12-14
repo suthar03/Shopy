@@ -1,7 +1,11 @@
 # Shopy
 IT IS A SHOP MANAGEMENT DESKTOP APPLICATION.
 
-Developed a customized application for shop management. Motivation behind this application is to create an application which is very easy to use and understandable. Since many shopkeepers in rural areas are not very educated, so I have made this application for all such people.  I have created this application on demand of my brother. He is running a shop in our village. Like we have to do lots of calculation while making balance sheet/Bills for customers. And we have to do I repeatedly like for every customer we have to do at least twice in a month. It takes almost 2 days (working 15-20 hours) only for calculation and cross checking. He motivated me to do this, As sometime whenever I was at home I also have to help in that process. To reduce the effort, I have done this. This application successfully running from 01 January 2020 to onward. I have done trial for 2 months by myself to figure out bugs. And then I handover this application to my brother and I am working on it to improve some algorithms.
+This desktop application is designed for efficient shop management, providing a user-friendly experience. The motivation behind its development was to address the needs of shopkeepers, particularly those in rural areas with limited education.
+
+The application simplifies tasks like balance sheet creation and bill generation, catering to the specific requirements of small businesses. The time-consuming nature of manual calculations prompted the creation of this application, significantly reducing the workload.
+
+The application has been operational since January 1, 2020, and has undergone a two-month trial period for bug identification and resolution. Ongoing efforts include continuous improvement of algorithms to enhance the application's functionality.
    
 # Technology Used: 
  java
